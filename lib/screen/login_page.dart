@@ -1,4 +1,3 @@
-import 'package:fajira_grosery/screen/home_screen.dart';
 import 'package:fajira_grosery/widgets/rasied_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -117,7 +116,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -179,7 +177,7 @@ class _LoginPageState extends State<LoginPage> {
                                 email: email.text,
                                 password: password.text,
                               );
-                              
+
                               submitFunction();
                             } on PlatformException catch (err) {
                               var message = 'assar';

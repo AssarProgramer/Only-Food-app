@@ -20,12 +20,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    // food = Food(
-    //     foodImage: '5453',
-    //     foodName: 'sadsa',
-    //     foodPrice: 20,
-    //     foodTitle: 'title',
-    //     rating: 30);
     super.initState();
     Firestore.instance
         .collection('Food')
@@ -408,8 +402,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           foodType: food.foodType,
                           foodRating: food.foodRating,
                           whenPreesd: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => DetilePage()));
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => DetilePage(
+                                
+                                ),
+                              ),
+                            );
                           },
                         ),
                         FeaturedContainer(
@@ -418,7 +417,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           foodName: 'Chicken Bros',
                           foodPrice: 40,
                           foodType: 'Marine Star Hotal',
-                          foodRating:4.5,
+                          foodRating: 4.5,
                         ),
                         FeaturedContainer(
                           whenPreesd: () {},
@@ -426,7 +425,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           foodName: 'Chicken Bross',
                           foodPrice: 40,
                           foodType: 'Marine Star Hotal',
-                           foodRating:4.5,
+                          foodRating: 4.5,
                         ),
                       ],
                     ),

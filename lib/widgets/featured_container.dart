@@ -105,7 +105,7 @@ class FeaturedContainer extends StatelessWidget {
             left: 90,
           ),
           child: CircleAvatar(
-            backgroundImage: AssetImage(
+            backgroundImage: NetworkImage(
               foodImage,
             ),
             maxRadius: 65,

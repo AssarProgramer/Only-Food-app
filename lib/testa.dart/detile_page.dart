@@ -1,7 +1,14 @@
+
 import 'package:flutter/material.dart';
 import '../widgets/rasied_button.dart';
 
 class DetilePage extends StatefulWidget {
+  final String foodImage;
+  final String foodName;
+  final String foodType;
+  final String foodPrice;
+
+  DetilePage({this.foodImage,this.foodName,this.foodPrice,this.foodType,});
   @override
   _DetilePageState createState() => _DetilePageState();
 }
@@ -16,7 +23,7 @@ class _DetilePageState extends State<DetilePage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                '\$50',
+                '\$${widget.foodPrice}',
                 style: TextStyle(
                     color: Theme.of(context).accentColor,
                     fontSize: 20,
@@ -201,14 +208,14 @@ class _DetilePageState extends State<DetilePage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 Text(
-                                  'Chicken Brost',
+                                  widget.foodName,
                                   style: TextStyle(
                                       color: Theme.of(context).primaryColor,
                                       fontSize: 25,
                                       fontWeight: FontWeight.bold),
                                 ),
                                 Text(
-                                  'Marine Star Hotal',
+                                  widget.foodType,
                                   style: TextStyle(
                                       fontSize: 17,
                                       fontWeight: FontWeight.w300),
@@ -258,7 +265,7 @@ class _DetilePageState extends State<DetilePage> {
                 padding: EdgeInsets.only(left: 90, top: 20),
                 child: CircleAvatar(
                   maxRadius: 140,
-                  backgroundImage: AssetImage('images/pastascheese3.jpg'),
+                  backgroundImage:NetworkImage(widget.foodImage),
                 ),
               ),
             ],
