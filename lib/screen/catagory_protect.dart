@@ -54,7 +54,7 @@ class CatagoryProtect extends StatelessWidget {
           FeaturedContainer(
             foodImage: 'images/pastascheese3.jpg',
             foodName: 'Pasta Cheese',
-            foodPrice: 50,
+            foodPrice: 70,
             foodType: '7 Ocean Hotal',
             foodRating:4.5,
             whenPreesd: () {},

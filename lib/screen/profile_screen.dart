@@ -319,7 +319,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             onPressed: () {
                               getImage(
-                                source: ImageSource.gallery,
+                                source: ImageSource.camera,
                               );
 
                               Text(

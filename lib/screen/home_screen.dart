@@ -405,27 +405,52 @@ class _HomeScreenState extends State<HomeScreen> {
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) => DetilePage(
-                                
+                                  foodImage: food.foodImage,
+                                  foodName: food.foodName,
+                                  foodPrice: food.foodPrice,
+                                  foodType: food.foodType,
                                 ),
                               ),
                             );
                           },
                         ),
                         FeaturedContainer(
-                          whenPreesd: () {},
-                          foodImage: 'images/chicken4.jpg',
-                          foodName: 'Chicken Bros',
-                          foodPrice: 40,
-                          foodType: 'Marine Star Hotal',
-                          foodRating: 4.5,
+                          foodImage: food.foodImage,
+                          foodName: food.foodName,
+                          foodPrice: food.foodPrice,
+                          foodType: food.foodType,
+                          foodRating: food.foodRating,
+                          whenPreesd: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => DetilePage(
+                                  foodImage: food.foodImage,
+                                  foodName: food.foodName,
+                                  foodPrice: food.foodPrice,
+                                  foodType: food.foodType,
+                                ),
+                              ),
+                            );
+                          },
                         ),
                         FeaturedContainer(
-                          whenPreesd: () {},
-                          foodImage: 'images/chicken4.jpg',
-                          foodName: 'Chicken Bross',
-                          foodPrice: 40,
-                          foodType: 'Marine Star Hotal',
-                          foodRating: 4.5,
+                          foodImage: food.foodImage,
+                          foodName: food.foodName,
+                          foodPrice: food.foodPrice,
+                          foodType: food.foodType,
+                          foodRating: food.foodRating,
+                          whenPreesd: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => DetilePage(
+                                  foodImage: food.foodImage,
+                                  foodName: food.foodName,
+                                  foodPrice: food.foodPrice,
+                                  foodType: food.foodType,
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),
