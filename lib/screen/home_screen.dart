@@ -402,7 +402,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Row(
                       children: <Widget>[
                         FeaturedContainer(
-                          foodImage: 'images/pastascheese3.jpg',
+                          foodImage: food.foodImage,
                           foodName: food.foodName,
                           foodPrice: food.foodPrice,
                           foodType: food.foodType,
