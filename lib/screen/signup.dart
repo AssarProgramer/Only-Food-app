@@ -176,25 +176,25 @@ class _SignUpPageState extends State<SignUpPage> {
                   TextFormFeild(
                     myObscureText: false,
                     hintText: 'Full Name',
-                    controller: fullName,
+                    myController: fullName,
                     keybord: TextInputType.emailAddress,
                   ),
                   TextFormFeild(
                     myObscureText: false,
                     hintText: 'Email',
-                    controller: email,
+                    myController: email,
                     keybord: TextInputType.emailAddress,
                   ),
                   TextFormFeild(
                     myObscureText: true,
-                    controller: password,
+                    myController: password,
                     keybord: TextInputType.emailAddress,
                     hintText: 'Password',
                   ),
                   TextFormFeild(
                     myObscureText: false,
                     hintText: 'Phonn Number',
-                    controller: phoneNumber,
+                    myController: phoneNumber,
                     keybord: TextInputType.number,
                   ),
                   GestureDetector(
@@ -221,7 +221,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                   TextFormFeild(
                     myObscureText: false,
-                    controller: address,
+                    myController: address,
                     keybord: TextInputType.emailAddress,
                     hintText: 'Address',
                   ),
@@ -261,7 +261,6 @@ class _SignUpPageState extends State<SignUpPage> {
                     myImage: isImage,
                     email: email.text,
                     fullName: fullName.text,
-                    password: password.text,
                     phoneNumber: int.parse(phoneNumber.text),
                     address: address.text,
                     gender: isMale ? 'Male' : 'Famale',
@@ -278,7 +277,6 @@ class _SignUpPageState extends State<SignUpPage> {
                       .document(authResult.user.uid)
                       .setData(
                     {
-                      'password': user.password,
                       'email': user.email,
                       'phoneNumber': user.phoneNumber,
                       'fullName': user.fullName,

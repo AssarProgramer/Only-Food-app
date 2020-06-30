@@ -72,13 +72,13 @@ class _LoginPageState extends State<LoginPage> {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         TextFormFeild(
-          controller: email,
+          myController: email,
           hintText: 'Email',
           myObscureText: false,
           keybord: TextInputType.emailAddress,
         ),
         TextFormFeild(
-          controller: password,
+          myController: password,
           hintText: 'Password',
           myObscureText: true,
           keybord: TextInputType.emailAddress,

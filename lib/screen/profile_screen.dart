@@ -1,8 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../widgets/textform_feild.dart';
 import 'package:fajira_grosery/widgets/rasied_button.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../model/user.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -10,19 +14,35 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  Widget textfeildContainer({String textfeildName}) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Color(0xfffde6f0),
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.only(top: 20, left: 15),
-        child: Text(textfeildName),
-      ),
-      height: MediaQuery.of(context).size.height * 0.1 - 25,
-    );
+  static User userData;
+  bool isMale = false;
+  @override
+  void initState() {
+    super.initState();
+    currentuser();
+  }
+
+  var uid;
+  void currentuser() async {
+    final FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    uid = user.uid;
+    Firestore.instance
+        .collection('user')
+        .document(uid)
+        .snapshots()
+        .listen((event) {
+      setState(() {
+        userImage = event['image_Url'];
+        userData = User(
+          email: event['email'],
+          fullName: event['fullName'],
+          phoneNumber: event['phoneNumber'],
+          address: event['address'],
+          gender: event['gender'],
+          myImage: event['image'],
+        );
+      });
+    });
   }
 
   bool profileCondition = false;
@@ -37,14 +57,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   var dropdownvalue;
+  String userImage;
 
-  final GlobalKey<ScaffoldState> myKey = GlobalKey<ScaffoldState>();
+  GlobalKey<ScaffoldState> myKey = GlobalKey<ScaffoldState>();
 
-  final TextEditingController gender1 = TextEditingController();
-  final TextEditingController addrees = TextEditingController();
-  final TextEditingController email = TextEditingController();
-  final TextEditingController fullName = TextEditingController();
-  final TextEditingController phoneNumber = TextEditingController();
+  TextEditingController addrees;
+  TextEditingController email;
+  TextEditingController fullName;
+  TextEditingController phoneNumber;
 
   void submitFunction() {
     if (fullName.text.isEmpty || fullName.text.trim() == null) {
@@ -54,27 +74,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
           backgroundColor: Theme.of(context).primaryColor,
         ),
       );
-      return;
-    }
-    if (email.text.isEmpty || email.text.trim() == null) {
+    } else if (email.text.isEmpty || email.text.trim() == null) {
       myKey.currentState.showSnackBar(
         SnackBar(
           content: Text('please fill email'),
           backgroundColor: Theme.of(context).primaryColor,
         ),
       );
-      return;
-    }
-    if (phoneNumber.text.isEmpty || phoneNumber.text.trim() == null) {
+    } else if (phoneNumber.text.isEmpty || phoneNumber.text.trim() == null) {
       myKey.currentState.showSnackBar(
         SnackBar(
           content: Text('please fill PhoneNumber'),
           backgroundColor: Theme.of(context).primaryColor,
         ),
       );
-      return;
-    }
-    if (addrees.text.isEmpty || addrees.text.trim() == null) {
+    } else if (addrees.text.isEmpty || addrees.text.trim() == null) {
       myKey.currentState.showSnackBar(
         SnackBar(
           content: Text('please fill addrees'),
@@ -82,61 +96,196 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       );
     }
-    if (gender1.text.isEmpty || gender1.text.trim() == null) {
-      myKey.currentState.showSnackBar(
-        SnackBar(
-          content: Text('please fill gender'),
-          backgroundColor: Theme.of(context).primaryColor,
-        ),
-      );
-    }
   }
 
-  Widget _buildGender() {
+  Widget textfeildContainer({String textfeildName}) {
     return Container(
-      child: DropdownButtonFormField<String>(
-        decoration: InputDecoration(
-          fillColor: Color(0xfffde6f0),
-          filled: true,
-          border: OutlineInputBorder(
-            borderSide: BorderSide.none,
-            borderRadius: BorderRadius.circular(10),
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Color(0xfffde6f0),
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 19, left: 13.0),
+        child: Text(
+          textfeildName,
+          style: TextStyle(fontSize: 16),
+        ),
+      ),
+      height: MediaQuery.of(context).size.height * 0.1 - 23,
+    );
+  }
+
+  Widget secondPart() {
+    return Expanded(
+      flex: 2,
+      child: Container(
+        width: 400,
+        child: profileCondition == true
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Container(
+                    height: 400,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        TextFormFeild(
+                          keybord: TextInputType.number,
+                          hintText: 'Full Name',
+                          myController: fullName,
+                          myObscureText: false,
+                        ),
+                        TextFormFeild(
+                          keybord: TextInputType.text,
+                          hintText: 'Email',
+                          myController: email,
+                          myObscureText: false,
+                        ),
+                        TextFormFeild(
+                          keybord: TextInputType.text,
+                          hintText: 'Phone Number',
+                          myController: phoneNumber,
+                          myObscureText: false,
+                        ),
+                        TextFormFeild(
+                          keybord: TextInputType.text,
+                          hintText: 'Phone Number',
+                          myController: addrees,
+                          myObscureText: false,
+                        ),
+
+                        GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isMale = !isMale;
+                            });
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Color(0xfffde6f0),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 19, left: 13.0),
+                              child: Text(
+                                isMale ? 'Male' : 'Female',
+                                style: TextStyle(fontSize: 16),
+                              ),
+                            ),
+                            height:
+                                MediaQuery.of(context).size.height * 0.1 - 23,
+                          ),
+                        ),
+                        // _buildGender(),
+                      ],
+                    ),
+                  ),
+                  profileCondition == true
+                      ? Container(
+                          width: double.infinity,
+                          child: RasiedButton(
+                            buttonText: 'Update',
+                            colors: Theme.of(context).primaryColor,
+                            textColors: Colors.white,
+                            whenPrassed: () {
+                              submitFunction();
+                            },
+                          ))
+                      : Container(),
+                ],
+              )
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Container(
+                    height: 400,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        textfeildContainer(
+                          textfeildName: userData.fullName,
+                        ),
+                        textfeildContainer(
+                          textfeildName: userData.email,
+                        ),
+                        textfeildContainer(
+                          textfeildName: userData.phoneNumber.toString(),
+                        ),
+                        textfeildContainer(textfeildName: userData.address),
+                        textfeildContainer(
+                          textfeildName: userData.gender.toString(),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    height: 49,
+                  ),
+                ],
+              ),
+      ),
+    );
+  }
+
+  Widget circle() {
+    return Container(
+      child: Padding(
+        padding: const EdgeInsets.only(left: 140, top: 120),
+        child: CircleAvatar(
+          radius: 69,
+          backgroundColor: Colors.white,
+          child: CircleAvatar(
+            backgroundImage:
+                image == null ? NetworkImage(userImage) : FileImage(image),
+            radius: 65,
           ),
         ),
-        value: dropdownvalue,
-        hint: Text(
-          "Gender",
-          style: TextStyle(
-            color: Color(0xff221f20),
-          ),
-        ),
-        onChanged: (value) {
-          setState(
-            () {
-              dropdownvalue = value;
-            },
-          );
-        },
-        validator: (vaule) {
-          if (dropdownvalue == null) {
-            return "Select Gender";
-          }
-          return null;
-        },
-        items: gender.map<DropdownMenuItem<String>>(
-          (String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          },
-        ).toList(),
+      ),
+    );
+  }
+
+  Widget editCircleButton() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 100, bottom: 330),
+      child: Center(
+        child: profileCondition == true
+            ? CircleAvatar(
+                backgroundColor: Colors.white,
+                radius: 18,
+                child: IconButton(
+                  icon: Icon(
+                    Icons.edit,
+                    color: Colors.black,
+                  ),
+                  onPressed: () {
+                    getImage(
+                      source: ImageSource.camera,
+                    );
+
+                    Text(
+                      "From Gallery",
+                    );
+                  },
+                ),
+              )
+            : Container(),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    setState(() {
+      fullName = TextEditingController(text: userData.fullName);
+      email = TextEditingController(text: userData.email);
+      phoneNumber =
+          TextEditingController(text: userData.phoneNumber.toString());
+      addrees = TextEditingController(text: userData.address);
+    });
+
     return Scaffold(
       key: myKey,
       resizeToAvoidBottomInset: false,
@@ -169,15 +318,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         actions: <Widget>[
           IconButton(
-              icon: Text(
-                'Edit',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-              ),
-              onPressed: () {
-                setState(() {
+            icon: Text(
+              'Edit',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            ),
+            onPressed: () {
+              setState(
+                () {
                   profileCondition = true;
-                });
-              })
+                },
+              );
+            },
+          )
         ],
       ),
       body: Container(
@@ -193,144 +345,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Container(
                       width: double.infinity,
                       color: Theme.of(context).primaryColor,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[],
-                      ),
                     ),
                   ),
-                  Expanded(
-                    flex: 2,
-                    child: Container(
-                      width: 400,
-                      child: profileCondition == true
-                          ? Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                Container(
-                                  height: 440,
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: <Widget>[
-                                      TextFormFeild(
-                                        myObscureText: false,
-                                        keybord: TextInputType.emailAddress,
-                                        initialValue: 'Assarbaloch',
-                                      ),
-                                      TextFormFeild(
-                                        myObscureText: false,
-                                        keybord: TextInputType.emailAddress,
-                                        initialValue: 'assarbugti@gmail.com',
-                                      ),
-                                      TextFormFeild(
-                                        myObscureText: false,
-                                        keybord: TextInputType.emailAddress,
-                                        initialValue: '+1305514776',
-                                      ),
-                                      TextFormFeild(
-                                        myObscureText: false,
-                                        keybord: TextInputType.emailAddress,
-                                        initialValue:
-                                            '16 floor, mountainview,ca, Usa ',
-                                      ),
-                                      _buildGender(),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            )
-                          : Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: <Widget>[
-                                Container(
-                                  height: 440,
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: <Widget>[
-                                      textfeildContainer(
-                                        textfeildName: 'Assarbaloch',
-                                      ),
-                                      textfeildContainer(
-                                        textfeildName: 'assarbugti@gmail.com',
-                                      ),
-                                      textfeildContainer(
-                                        textfeildName: '+1305514776',
-                                      ),
-                                      textfeildContainer(
-                                        textfeildName:
-                                            '16 floor, mountainview,ca, Usa ',
-                                      ),
-                                      textfeildContainer(
-                                        textfeildName: 'Male',
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                    ),
-                  ),
-                  profileCondition == true
-                      ? Container(
-                          width: MediaQuery.of(context).size.width * 0.9 + 12,
-                          child: RasiedButton(
-                            buttonText: 'Update',
-                            colors: Theme.of(context).primaryColor,
-                            textColors: Colors.white,
-                            whenPrassed: () {
-                              submitFunction();
-                            },
-                          ),
-                        )
-                      : Container(),
-                  SizedBox(
-                    height: 20,
-                  ),
+                  secondPart(),
                 ],
               ),
-              Container(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 140, top: 100),
-                  child: CircleAvatar(
-                    radius: 69,
-                    backgroundColor: Colors.white,
-                    child: CircleAvatar(
-                      backgroundImage: image == null
-                          ? AssetImage('images/tonyprofile.jpg')
-                          : FileImage(image),
-                      radius: 65,
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 100, bottom: 330),
-                child: Center(
-                  child: profileCondition == true
-                      ? CircleAvatar(
-                          backgroundColor: Colors.white,
-                          radius: 18,
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.edit,
-                              color: Colors.black,
-                            ),
-                            onPressed: () {
-                              getImage(
-                                source: ImageSource.camera,
-                              );
-
-                              Text(
-                                "From Gallery",
-                              );
-                            },
-                          ),
-                        )
-                      : Container(),
-                ),
-              ),
+              circle(),
+              editCircleButton(),
             ],
           ),
         ),

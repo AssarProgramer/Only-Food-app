@@ -57,8 +57,6 @@ class _ContactState extends State<Contact> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       key: myKey,
       backgroundColor: Colors.white,
@@ -89,25 +87,25 @@ class _ContactState extends State<Contact> {
                       children: <Widget>[
                         TextFormFeild(
                           hintText: 'Full Name',
-                          controller: fullName,
+                          myController: fullName,
                           keybord: TextInputType.emailAddress,
                           myObscureText: false,
                         ),
                         TextFormFeild(
                           hintText: 'Email',
-                          controller: fullName,
+                          myController: email,
                           keybord: TextInputType.emailAddress,
                           myObscureText: false,
                         ),
                         TextFormFeild(
                           hintText: 'PhoneNumber',
-                          controller: phoneNumber,
+                          myController: phoneNumber,
                           keybord: TextInputType.emailAddress,
                           myObscureText: false,
                         ),
                         TextFormFeild(
                           hintText: 'Your Message',
-                          controller: yourMessage,
+                          myController: yourMessage,
                           keybord: TextInputType.emailAddress,
                           myObscureText: false,
                         ),

@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 
 class TextFormFeild extends StatefulWidget {
-  final TextEditingController controller;
+  final TextEditingController myController;
+
   final String hintText;
-  final String initialValue;
   final bool myObscureText;
   final TextInputType keybord;
 
   TextFormFeild({
-    this.controller,
+    this.myController,
     this.myObscureText,
     this.keybord,
-    this.initialValue,
     this.hintText,
   });
   @override
@@ -26,8 +25,7 @@ class _TextFormFeildState extends State<TextFormFeild> {
         child: TextFormField(
           keyboardType: widget.keybord,
           obscureText: widget.myObscureText,
-          controller: widget.controller,
-          initialValue: widget.initialValue,
+          controller: widget.myController,
           decoration: InputDecoration(
             border: OutlineInputBorder(
               borderSide: BorderSide.none,

@@ -27,14 +27,29 @@ class _HomeScreenState extends State<HomeScreen> {
         .snapshots()
         .listen(
       (event) {
-        print(event['foodName']);
-        print(event['foodType']);
         setState(() {
           food = Food(
             foodImage: event['foodImage'],
             foodName: event['foodName'],
             foodPrice: event['foodPrice'],
             foodType: event['foodType'],
+            foodRating: event['foodRating'],
+          );
+        });
+      },
+    );
+    Firestore.instance
+        .collection('Food')
+        .document('qaObgurYHoKWZaA51DuS')
+        .snapshots()
+        .listen(
+      (event) {
+        setState(() {
+          food = Food(
+            foodImage: event['foodImage'],
+            foodName: event['foodName'],
+            foodPrice: event['foodPrice'],
+            foodType: event['foodNameType'],
             foodRating: event['foodRating'],
           );
         });
@@ -349,14 +364,35 @@ class _HomeScreenState extends State<HomeScreen> {
                             plzza(
                               foodImage: 'images/salads.png',
                               foodName: 'GreenTea',
+                              whenPreesed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => CatagoryProtect(),
+                                  ),
+                                );
+                              },
                             ),
                             plzza(
                               foodImage: 'images/salads.png',
                               foodName: 'GreenTea',
+                              whenPreesed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => CatagoryProtect(),
+                                  ),
+                                );
+                              },
                             ),
                             plzza(
                               foodImage: 'images/salads.png',
                               foodName: 'GreenTea',
+                              whenPreesed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => CatagoryProtect(),
+                                  ),
+                                );
+                              },
                             ),
                           ],
                         ),
