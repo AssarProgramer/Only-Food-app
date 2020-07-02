@@ -41,29 +41,96 @@ class _SignUpPageState extends State<SignUpPage> {
   TextEditingController email = TextEditingController();
   TextEditingController fullName = TextEditingController();
   TextEditingController phoneNumber = TextEditingController();
-
   TextEditingController address = TextEditingController();
+
+  void submit() async {
+    try {
+      setState(() {
+        _netWorkLodding = true;
+      });
+      authResult = await _auth.createUserWithEmailAndPassword(
+        email: email.text,
+        password: password.text,
+      );
+
+      User user = User(
+        myImage: isImage,
+        email: email.text,
+        fullName: fullName.text,
+        phoneNumber: int.parse(phoneNumber.text),
+        address: address.text,
+        gender: isMale ? 'Male' : 'Famale',
+      );
+      final ref = FirebaseStorage.instance
+          .ref()
+          .child('User_image')
+          .child(authResult.user.uid + '.jpg');
+      await ref.putFile(isImage).onComplete;
+      final url = await ref.getDownloadURL();
+
+      Firestore.instance
+          .collection('user')
+          .document(authResult.user.uid)
+          .setData(
+        {
+          'email': user.email,
+          'phoneNumber': user.phoneNumber,
+          'fullName': user.fullName,
+          'gender': user.gender,
+          'address': user.address,
+          'image_Url': url==null?'':url,
+        },
+      );
+    } on PlatformException catch (err) {
+      var message = 'assar';
+      if (err.message != null) {
+        message = err.message;
+      }
+      myKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: Theme.of(context).errorColor,
+        ),
+      );
+      setState(() {
+        _netWorkLodding = false;
+      });
+    } catch (erro) {
+      setState(() {
+        _netWorkLodding = false;
+      });
+      myKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text(
+            erro,
+          ),
+          backgroundColor: Theme.of(context).errorColor,
+        ),
+      );
+    }
+    setState(
+      () {
+        _netWorkLodding = false;
+      },
+    );
+  }
 
   void submitFunction() {
     if (isImage == null) {
       myKey.currentState.showSnackBar(
         SnackBar(
-          content: Text('please fill fullName'),
+          content: Text('please Fill Image Photo'),
           backgroundColor: Theme.of(context).primaryColor,
         ),
       );
-      return;
-    }
-    if (fullName.text.isEmpty || fullName.text.trim() == null) {
+    } else if (fullName.text.isEmpty || fullName.text.trim() == null) {
       myKey.currentState.showSnackBar(
         SnackBar(
           content: Text('please fill fullName'),
           backgroundColor: Theme.of(context).primaryColor,
         ),
       );
-      return;
-    }
-    if (email.text.isEmpty || email.text.trim() == null) {
+    } else if (email.text.isEmpty || email.text.trim() == null) {
       myKey.currentState.showSnackBar(
         SnackBar(
           content: Text('please fill email'),
@@ -76,35 +143,29 @@ class _SignUpPageState extends State<SignUpPage> {
           content: Text("Please Try Vaild Email"),
         ),
       );
-      return;
-    }
-
-    if (phoneNumber.text.isEmpty || phoneNumber.text.trim() == null) {
+    } else if (phoneNumber.text.isEmpty || phoneNumber.text.trim() == null) {
       myKey.currentState.showSnackBar(
         SnackBar(
           content: Text('please fill PhoneNumber'),
           backgroundColor: Theme.of(context).primaryColor,
         ),
       );
-      return;
-    }
-    if (password.text.isEmpty || password.text.trim() == null) {
+    } else if (password.text.isEmpty || password.text.trim() == null) {
       myKey.currentState.showSnackBar(
         SnackBar(
           content: Text('please fill password'),
           backgroundColor: Theme.of(context).primaryColor,
         ),
       );
-      return;
-    }
-
-    if (address.text.isEmpty || address.text == null) {
+    } else if (address.text.isEmpty || address.text == null) {
       myKey.currentState.showSnackBar(
         SnackBar(
           content: Text('please fill Address'),
           backgroundColor: Theme.of(context).primaryColor,
         ),
       );
+    } else {
+      submit();
     }
   }
 
@@ -238,86 +299,18 @@ class _SignUpPageState extends State<SignUpPage> {
     return Container(
       child: Column(
         children: <Widget>[
-          if (_netWorkLodding)
-            CircularProgressIndicator(
-              backgroundColor: Colors.red,
-            ),
-          if (!_netWorkLodding)
-            RasiedButton(
-              textColors: Colors.white,
-              colors: Theme.of(context).primaryColor,
-              buttonText: 'SignUp',
-              whenPrassed: () async {
-                try {
-                  setState(() {
-                    _netWorkLodding = true;
-                  });
-                  authResult = await _auth.createUserWithEmailAndPassword(
-                    email: email.text,
-                    password: password.text,
-                  );
-
-                  User user = User(
-                    myImage: isImage,
-                    email: email.text,
-                    fullName: fullName.text,
-                    phoneNumber: int.parse(phoneNumber.text),
-                    address: address.text,
-                    gender: isMale ? 'Male' : 'Famale',
-                  );
-                  final ref = FirebaseStorage.instance
-                      .ref()
-                      .child('User _image')
-                      .child(authResult.user.uid + '.jpg');
-                  await ref.putFile(isImage).onComplete;
-                  final url = await ref.getDownloadURL();
-
-                  await Firestore.instance
-                      .collection('user')
-                      .document(authResult.user.uid)
-                      .setData(
-                    {
-                      'email': user.email,
-                      'phoneNumber': user.phoneNumber,
-                      'fullName': user.fullName,
-                      'gender': user.gender,
-                      'address': user.address,
-                      'image_Url': url,
-                    },
-                  );
-                  submitFunction();
-                } on PlatformException catch (err) {
-                  var message = 'assar';
-                  if (err.message != null) {
-                    message = err.message;
-                  }
-                  myKey.currentState.showSnackBar(
-                    SnackBar(
-                      content: Text(message),
-                      backgroundColor: Theme.of(context).errorColor,
-                    ),
-                  );
-                  setState(() {
-                    _netWorkLodding = false;
-                  });
-                } catch (erro) {
-                  setState(() {
-                    _netWorkLodding = false;
-                  });
-                  myKey.currentState.showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        erro,
-                      ),
-                      backgroundColor: Theme.of(context).errorColor,
-                    ),
-                  );
-                }
-                setState(() {
-                  _netWorkLodding = false;
-                });
-              },
-            ),
+          _netWorkLodding == false
+              ? RasiedButton(
+                  textColors: Colors.white,
+                  colors: Theme.of(context).primaryColor,
+                  buttonText: 'SignUp',
+                  whenPrassed: () {
+                    submitFunction();
+                  },
+                )
+              : CircularProgressIndicator(
+                  backgroundColor: Colors.red,
+                ),
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.0 + 10,
           ),

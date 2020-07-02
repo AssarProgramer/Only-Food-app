@@ -17,44 +17,18 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   Food food;
-
-  @override
-  void initState() {
-    super.initState();
-    Firestore.instance
-        .collection('Food')
-        .document('MHO1ZqiTw2TtAzLs66KT')
-        .snapshots()
-        .listen(
-      (event) {
-        setState(() {
-          food = Food(
-            foodImage: event['foodImage'],
-            foodName: event['foodName'],
-            foodPrice: event['foodPrice'],
-            foodType: event['foodType'],
-            foodRating: event['foodRating'],
-          );
-        });
-      },
-    );
-    Firestore.instance
-        .collection('Food')
-        .document('qaObgurYHoKWZaA51DuS')
-        .snapshots()
-        .listen(
-      (event) {
-        setState(() {
-          food = Food(
-            foodImage: event['foodImage'],
-            foodName: event['foodName'],
-            foodPrice: event['foodPrice'],
-            foodType: event['foodNameType'],
-            foodRating: event['foodRating'],
-          );
-        });
-      },
-    );
+  var userImage;
+  var uid;
+  void getUserImage() async {
+    final FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    uid = user.uid;
+    // Firestore.instance
+    //     .collection("user")
+    //     .document(uid)
+    //     .snapshots()
+    //     .listen((event) {
+    //   userImage = event["image_Url"];
+    // });
   }
 
   Widget plzza({String foodImage, String foodName, Function whenPreesed}) {
@@ -102,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: CircleAvatar(
               backgroundColor: Colors.red,
               maxRadius: 45,
-              backgroundImage: AssetImage('images/tonyprofile.jpg'),
+              backgroundImage: NetworkImage(userImage),
             ),
           ),
           SizedBox(
@@ -213,6 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    getUserImage();
     MediaQueryData mediaQueryData = MediaQuery.of(context);
     return Scaffold(
       drawer: Container(
@@ -330,182 +305,218 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       resizeToAvoidBottomInset: false,
       backgroundColor: Color(0xfff0f1f2),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        child: Stack(
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.only(left: 10),
-              height: double.infinity,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    height: mediaQueryData.size.height * 0.2 + 50,
-                    // height: MediaQuery.of(context).size.height * 0.1 + 50,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Container(
-                        child: Row(
-                          children: <Widget>[
-                            plzza(
-                              whenPreesed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => CatagoryProtect(),
-                                  ),
-                                );
-                              },
-                              foodImage: 'images/pizza1.png',
-                              foodName: 'pastas',
+      body: StreamBuilder(
+        stream: Firestore.instance
+            .collection("Food")
+            .document('MHO1ZqiTw2TtAzLs66KT')
+            .snapshots(),
+        builder: (ctx, snapShot) {
+          if (snapShot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          food = Food(
+            foodRating: snapShot.data["foodRating"],
+            foodImage: snapShot.data["foodImage"],
+            foodName: snapShot.data["foodName"],
+            foodPrice: snapShot.data["foodPrice"],
+            foodType: snapShot.data["foodType"],
+          );
+          return StreamBuilder(
+            stream:
+                Firestore.instance.collection("user").document(uid).snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              userImage = snapshot.data["image_Url"];
+
+              return Container(
+                width: double.infinity,
+                height: double.infinity,
+                child: Stack(
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.only(left: 10),
+                      height: double.infinity,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                            height: mediaQueryData.size.height * 0.2 + 50,
+                            // height: MediaQuery.of(context).size.height * 0.1 + 50,
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Container(
+                                child: Row(
+                                  children: <Widget>[
+                                    plzza(
+                                      whenPreesed: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                CatagoryProtect(),
+                                          ),
+                                        );
+                                      },
+                                      foodImage: 'images/pizza1.png',
+                                      foodName: 'pastas',
+                                    ),
+                                    plzza(
+                                      foodImage: 'images/salads.png',
+                                      foodName: 'GreenTea',
+                                      whenPreesed: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                CatagoryProtect(),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    plzza(
+                                      foodImage: 'images/salads.png',
+                                      foodName: 'GreenTea',
+                                      whenPreesed: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                CatagoryProtect(),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    plzza(
+                                      foodImage: 'images/salads.png',
+                                      foodName: 'GreenTea',
+                                      whenPreesed: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                CatagoryProtect(),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
-                            plzza(
-                              foodImage: 'images/salads.png',
-                              foodName: 'GreenTea',
-                              whenPreesed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => CatagoryProtect(),
+                          ),
+                          Container(
+                            margin: EdgeInsets.symmetric(horizontal: 15),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(
+                                  'Featured',
+                                  style: TextStyle(
+                                      fontSize: 23,
+                                      color: Theme.of(context).accentColor,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              CatagoryProtect()),
+                                    );
+                                  },
+                                  child: Text(
+                                    'View All',
+                                    style: TextStyle(
+                                        fontSize: 17, color: Color(0xff04d4ee)),
                                   ),
-                                );
-                              },
+                                ),
+                              ],
                             ),
-                            plzza(
-                              foodImage: 'images/salads.png',
-                              foodName: 'GreenTea',
-                              whenPreesed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => CatagoryProtect(),
-                                  ),
-                                );
-                              },
+                          ),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: <Widget>[
+                                FeaturedContainer(
+                                  foodImage: food.foodImage,
+                                  foodName: food.foodName,
+                                  foodPrice: food.foodPrice,
+                                  foodType: food.foodType,
+                                  foodRating: food.foodRating,
+                                  whenPreesd: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => DetilePage(
+                                          foodImage: food.foodImage,
+                                          foodName: food.foodName,
+                                          foodPrice: food.foodPrice,
+                                          foodType: food.foodType,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                                FeaturedContainer(
+                                  foodImage: food.foodImage,
+                                  foodName: food.foodName,
+                                  foodPrice: food.foodPrice,
+                                  foodType: food.foodType,
+                                  foodRating: food.foodRating,
+                                  whenPreesd: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => DetilePage(
+                                          foodImage: food.foodImage,
+                                          foodName: food.foodName,
+                                          foodPrice: food.foodPrice,
+                                          foodType: food.foodType,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                                FeaturedContainer(
+                                  foodImage: food.foodImage,
+                                  foodName: food.foodName,
+                                  foodPrice: food.foodPrice,
+                                  foodType: food.foodType,
+                                  foodRating: food.foodRating,
+                                  whenPreesd: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => DetilePage(
+                                          foodImage: food.foodImage,
+                                          foodName: food.foodName,
+                                          foodPrice: food.foodPrice,
+                                          foodType: food.foodType,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
                             ),
-                            plzza(
-                              foodImage: 'images/salads.png',
-                              foodName: 'GreenTea',
-                              whenPreesed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => CatagoryProtect(),
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 15),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          'Featured',
-                          style: TextStyle(
-                              fontSize: 23,
-                              color: Theme.of(context).accentColor,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                  builder: (context) => CatagoryProtect()),
-                            );
-                          },
-                          child: Text(
-                            'View All',
-                            style: TextStyle(
-                                fontSize: 17, color: Color(0xff04d4ee)),
-                          ),
-                        ),
-                      ],
+                    Container(
+                      height: MediaQuery.of(context).size.height * 0.2 + 40,
+                      color: Theme.of(context).primaryColor,
+                      child: Column(
+                        children: <Widget>[
+                          circle(),
+                        ],
+                      ),
                     ),
-                  ),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: <Widget>[
-                        FeaturedContainer(
-                          foodImage: food.foodImage,
-                          foodName: food.foodName,
-                          foodPrice: food.foodPrice,
-                          foodType: food.foodType,
-                          foodRating: food.foodRating,
-                          whenPreesd: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => DetilePage(
-                                  foodImage: food.foodImage,
-                                  foodName: food.foodName,
-                                  foodPrice: food.foodPrice,
-                                  foodType: food.foodType,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                        FeaturedContainer(
-                          foodImage: food.foodImage,
-                          foodName: food.foodName,
-                          foodPrice: food.foodPrice,
-                          foodType: food.foodType,
-                          foodRating: food.foodRating,
-                          whenPreesd: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => DetilePage(
-                                  foodImage: food.foodImage,
-                                  foodName: food.foodName,
-                                  foodPrice: food.foodPrice,
-                                  foodType: food.foodType,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                        FeaturedContainer(
-                          foodImage: food.foodImage,
-                          foodName: food.foodName,
-                          foodPrice: food.foodPrice,
-                          foodType: food.foodType,
-                          foodRating: food.foodRating,
-                          whenPreesd: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => DetilePage(
-                                  foodImage: food.foodImage,
-                                  foodName: food.foodName,
-                                  foodPrice: food.foodPrice,
-                                  foodType: food.foodType,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              height: MediaQuery.of(context).size.height * 0.2 + 40,
-              color: Theme.of(context).primaryColor,
-              child: Column(
-                children: <Widget>[
-                  circle(),
-                ],
-              ),
-            ),
-            search(),
-          ],
-        ),
+                    search(),
+                  ],
+                ),
+              );
+            },
+          );
+        },
       ),
     );
   }

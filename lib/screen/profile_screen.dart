@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../widgets/textform_feild.dart';
 import 'package:fajira_grosery/widgets/rasied_button.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import '../model/user.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -14,87 +15,87 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  static User userData;
+  GlobalKey<ScaffoldState> myKey = GlobalKey<ScaffoldState>();
+  User userData;
   bool isMale = false;
-  @override
-  void initState() {
-    super.initState();
-    currentuser();
+  bool profileCondition = false;
+  var uid;
+  TextEditingController addrees = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController fullName = TextEditingController();
+  TextEditingController phoneNumber = TextEditingController();
+
+  void checkGender() {
+    if (userData.gender == "Male") {
+      isMale = true;
+    } else {
+      isMale = false;
+    }
   }
 
-  var uid;
-  void currentuser() async {
-    final FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    uid = user.uid;
-    Firestore.instance
-        .collection('user')
-        .document(uid)
-        .snapshots()
-        .listen((event) {
-      setState(() {
-        userImage = event['image_Url'];
-        userData = User(
-          email: event['email'],
-          fullName: event['fullName'],
-          phoneNumber: event['phoneNumber'],
-          address: event['address'],
-          gender: event['gender'],
-          myImage: event['image'],
-        );
-      });
+  void userDataUpdate() {
+    Firestore.instance.collection("user").document(uid).updateData({
+      "fullName": fullName.text,
+      "email": email.text,
+      "addrees": addrees.text,
+      "phoneNumber": int.parse(phoneNumber.text),
+      "gender": isMale == true ? "Male" : "Female",
     });
   }
 
-  bool profileCondition = false;
+  void getUserData() async {
+    final FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    uid = user.uid;
+  }
 
-  List<String> gender = ["Male", "Female"];
+  // List<String> gender = ["Male", "Female"];
   File image;
   Future getImage({ImageSource source}) async {
     final pickedImage = await ImagePicker().getImage(source: source);
-    setState(() {
-      image = File(pickedImage.path);
-    });
+    setState(
+      () {
+        image = File(pickedImage.path);
+      },
+    );
   }
 
   var dropdownvalue;
   String userImage;
 
-  GlobalKey<ScaffoldState> myKey = GlobalKey<ScaffoldState>();
-
-  TextEditingController addrees;
-  TextEditingController email;
-  TextEditingController fullName;
-  TextEditingController phoneNumber;
-
   void submitFunction() {
-    if (fullName.text.isEmpty || fullName.text.trim() == null) {
+    if (fullName.text == null) {
       myKey.currentState.showSnackBar(
         SnackBar(
           content: Text('please fill fullName'),
           backgroundColor: Theme.of(context).primaryColor,
         ),
       );
-    } else if (email.text.isEmpty || email.text.trim() == null) {
+    } else if (email.text.trim() == null) {
       myKey.currentState.showSnackBar(
         SnackBar(
           content: Text('please fill email'),
           backgroundColor: Theme.of(context).primaryColor,
         ),
       );
-    } else if (phoneNumber.text.isEmpty || phoneNumber.text.trim() == null) {
+    } else if (phoneNumber.text.trim() == null) {
       myKey.currentState.showSnackBar(
         SnackBar(
           content: Text('please fill PhoneNumber'),
           backgroundColor: Theme.of(context).primaryColor,
         ),
       );
-    } else if (addrees.text.isEmpty || addrees.text.trim() == null) {
+    } else if (addrees.text.trim() == null) {
       myKey.currentState.showSnackBar(
         SnackBar(
           content: Text('please fill addrees'),
           backgroundColor: Theme.of(context).primaryColor,
         ),
       );
+    } else {
+      setState(() {
+        profileCondition = false;
+      });
+      userDataUpdate();
     }
   }
 
@@ -131,30 +132,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         TextFormFeild(
-                          keybord: TextInputType.number,
-                          hintText: 'Full Name',
                           myController: fullName,
+                          keybord: TextInputType.text,
+                          hintText: 'Full Name',
                           myObscureText: false,
+                          // myInitialValue: userData.fullName,
                         ),
                         TextFormFeild(
+                          myController: email,
                           keybord: TextInputType.text,
                           hintText: 'Email',
-                          myController: email,
                           myObscureText: false,
+                          // myInitialValue: userData.email,
                         ),
                         TextFormFeild(
-                          keybord: TextInputType.text,
-                          hintText: 'Phone Number',
                           myController: phoneNumber,
+                          keybord: TextInputType.number,
+                          hintText: 'Phone Number',
+                          // myInitialValue: userData.phoneNumber.toString(),
                           myObscureText: false,
                         ),
                         TextFormFeild(
-                          keybord: TextInputType.text,
-                          hintText: 'Phone Number',
                           myController: addrees,
+                          keybord: TextInputType.text,
+                          hintText: 'address',
+                          // myInitialValue: userData.address,
                           myObscureText: false,
                         ),
-
                         GestureDetector(
                           onTap: () {
                             setState(() {
@@ -179,7 +183,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 MediaQuery.of(context).size.height * 0.1 - 23,
                           ),
                         ),
-                        // _buildGender(),
                       ],
                     ),
                   ),
@@ -216,7 +219,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         textfeildContainer(textfeildName: userData.address),
                         textfeildContainer(
-                          textfeildName: userData.gender.toString(),
+                          textfeildName: userData.gender,
                         ),
                       ],
                     ),
@@ -278,14 +281,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    setState(() {
-      fullName = TextEditingController(text: userData.fullName);
-      email = TextEditingController(text: userData.email);
-      phoneNumber =
-          TextEditingController(text: userData.phoneNumber.toString());
-      addrees = TextEditingController(text: userData.address);
-    });
-
+    getUserData();
     return Scaffold(
       key: myKey,
       resizeToAvoidBottomInset: false,
@@ -332,29 +328,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
           )
         ],
       ),
-      body: Container(
-        child: Container(
-          width: double.infinity,
-          height: double.infinity,
-          child: Stack(
-            children: <Widget>[
-              Column(
+      body: StreamBuilder(
+        stream: Firestore.instance.collection("user").snapshots(),
+        builder: (ctx, snapShot) {
+          userData = User(
+            email: snapShot.data.documents[0]['email'],
+            fullName: snapShot.data.documents[0]['fullName'],
+            phoneNumber: snapShot.data.documents[0]['phoneNumber'],
+            address: snapShot.data.documents[0]['address'],
+            gender: snapShot.data.documents[0]['gender'],
+            myImage: null,
+          );
+          userImage = snapShot.data.documents[0]["image_Url"];
+          fullName = new TextEditingController(text: userData.fullName);
+          email = new TextEditingController(text: userData.email);
+          phoneNumber =
+              new TextEditingController(text: userData.phoneNumber.toString());
+          addrees = new TextEditingController(text: userData.address);
+
+          return Container(
+            child: Container(
+              width: double.infinity,
+              height: double.infinity,
+              child: Stack(
                 children: <Widget>[
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      width: double.infinity,
-                      color: Theme.of(context).primaryColor,
-                    ),
+                  Column(
+                    children: <Widget>[
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          width: double.infinity,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                      secondPart(),
+                    ],
                   ),
-                  secondPart(),
+                  circle(),
+                  editCircleButton(),
                 ],
               ),
-              circle(),
-              editCircleButton(),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
