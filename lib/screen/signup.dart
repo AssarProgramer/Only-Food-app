@@ -68,7 +68,7 @@ class _SignUpPageState extends State<SignUpPage> {
       await ref.putFile(isImage).onComplete;
       final url = await ref.getDownloadURL();
 
-      Firestore.instance
+      await Firestore.instance
           .collection('user')
           .document(authResult.user.uid)
           .setData(
@@ -77,8 +77,9 @@ class _SignUpPageState extends State<SignUpPage> {
           'phoneNumber': user.phoneNumber,
           'fullName': user.fullName,
           'gender': user.gender,
+          "userId":authResult.user.uid,
           'address': user.address,
-          'image_Url': url==null?'':url,
+          'image_Url': url,
         },
       );
     } on PlatformException catch (err) {

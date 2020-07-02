@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -5,7 +7,6 @@ import '../widgets/textform_feild.dart';
 import 'package:fajira_grosery/widgets/rasied_button.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 
 import '../model/user.dart';
 
@@ -16,14 +17,16 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   GlobalKey<ScaffoldState> myKey = GlobalKey<ScaffoldState>();
-  User userData;
-  bool isMale = false;
-  bool profileCondition = false;
-  var uid;
+
   TextEditingController addrees = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController fullName = TextEditingController();
   TextEditingController phoneNumber = TextEditingController();
+
+  User userData;
+  bool isMale = false;
+  bool profileCondition = false;
+  var uid;
 
   void checkGender() {
     if (userData.gender == "Male") {
@@ -219,7 +222,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         textfeildContainer(textfeildName: userData.address),
                         textfeildContainer(
-                          textfeildName: userData.gender,
+                          textfeildName: userData.gender.toString(),
                         ),
                       ],
                     ),
@@ -331,20 +334,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: StreamBuilder(
         stream: Firestore.instance.collection("user").snapshots(),
         builder: (ctx, snapShot) {
-          userData = User(
-            email: snapShot.data.documents[0]['email'],
-            fullName: snapShot.data.documents[0]['fullName'],
-            phoneNumber: snapShot.data.documents[0]['phoneNumber'],
-            address: snapShot.data.documents[0]['address'],
-            gender: snapShot.data.documents[0]['gender'],
-            myImage: null,
-          );
-          userImage = snapShot.data.documents[0]["image_Url"];
-          fullName = new TextEditingController(text: userData.fullName);
-          email = new TextEditingController(text: userData.email);
-          phoneNumber =
-              new TextEditingController(text: userData.phoneNumber.toString());
-          addrees = new TextEditingController(text: userData.address);
+          var myDocuments = snapShot.data.documents;
+          myDocuments.forEach((checkDocument) {
+            if (uid == checkDocument["userId"]) {
+              userData = User(
+                email: checkDocument['email'],
+                fullName: checkDocument['fullName'],
+                phoneNumber: checkDocument['phoneNumber'],
+                address: checkDocument['address'],
+                gender: checkDocument['gender'],
+                myImage: null,
+              );
+              userImage = checkDocument["image_Url"];
+              fullName = TextEditingController(text: userData.fullName);
+              email = TextEditingController(text: userData.email);
+              phoneNumber =
+                  TextEditingController(text: userData.phoneNumber.toString());
+              addrees = TextEditingController(text: userData.address);
+            }
+          });
 
           return Container(
             child: Container(

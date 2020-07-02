@@ -76,7 +76,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: CircleAvatar(
               backgroundColor: Colors.red,
               maxRadius: 45,
-              backgroundImage: NetworkImage(userImage),
+              // backgroundImage: NetworkImage(userImage),
             ),
           ),
           SizedBox(
@@ -306,31 +306,33 @@ class _HomeScreenState extends State<HomeScreen> {
       resizeToAvoidBottomInset: false,
       backgroundColor: Color(0xfff0f1f2),
       body: StreamBuilder(
-        stream: Firestore.instance
-            .collection("Food")
-            .document('MHO1ZqiTw2TtAzLs66KT')
-            .snapshots(),
+        stream: Firestore.instance.collection("Food").snapshots(),
         builder: (ctx, snapShot) {
           if (snapShot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           }
+
           food = Food(
-            foodRating: snapShot.data["foodRating"],
-            foodImage: snapShot.data["foodImage"],
-            foodName: snapShot.data["foodName"],
-            foodPrice: snapShot.data["foodPrice"],
-            foodType: snapShot.data["foodType"],
+            foodRating: snapShot.data.documents[0]["foodRating"],
+            foodImage: snapShot.data.documents[0]["foodImage"],
+            foodName: snapShot.data.documents[0]["foodName"],
+            foodPrice: snapShot.data.documents[0]["foodPrice"],
+            foodType: snapShot.data.documents[0]["foodType"],
           );
           return StreamBuilder(
-            stream:
-                Firestore.instance.collection("user").document(uid).snapshots(),
+            stream: Firestore.instance.collection("user").snapshots(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(
                   child: CircularProgressIndicator(),
                 );
               }
-              userImage = snapshot.data["image_Url"];
+              var myDocuments = snapShot.data.documents;
+              myDocuments.forEach((checkDocument) {
+                if (uid == checkDocument["userId"]) {
+                  userImage = checkDocument["image_Url"];
+                }
+              });
 
               return Container(
                 width: double.infinity,
