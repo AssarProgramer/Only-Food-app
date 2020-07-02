@@ -18,10 +18,10 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   GlobalKey<ScaffoldState> myKey = GlobalKey<ScaffoldState>();
 
-  TextEditingController addrees = TextEditingController();
-  TextEditingController email = TextEditingController();
-  TextEditingController fullName = TextEditingController();
-  TextEditingController phoneNumber = TextEditingController();
+  TextEditingController addrees;
+  TextEditingController email;
+  TextEditingController fullName;
+  TextEditingController phoneNumber;
 
   User userData;
   bool isMale = false;
@@ -29,9 +29,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   var uid;
 
   void checkGender() {
+ 
     if (userData.gender == "Male") {
       isMale = true;
     } else {
+
       isMale = false;
     }
   }
@@ -103,6 +105,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget textfeildContainer({String textfeildName}) {
+    checkGender();
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -334,7 +337,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: StreamBuilder(
         stream: Firestore.instance.collection("user").snapshots(),
         builder: (ctx, snapShot) {
+          if (snapShot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
           var myDocuments = snapShot.data.documents;
+
           myDocuments.forEach((checkDocument) {
             if (uid == checkDocument["userId"]) {
               userData = User(

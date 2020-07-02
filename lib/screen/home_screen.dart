@@ -22,13 +22,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void getUserImage() async {
     final FirebaseUser user = await FirebaseAuth.instance.currentUser();
     uid = user.uid;
-    // Firestore.instance
-    //     .collection("user")
-    //     .document(uid)
-    //     .snapshots()
-    //     .listen((event) {
-    //   userImage = event["image_Url"];
-    // });
   }
 
   Widget plzza({String foodImage, String foodName, Function whenPreesed}) {
@@ -76,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: CircleAvatar(
               backgroundColor: Colors.red,
               maxRadius: 45,
-              // backgroundImage: NetworkImage(userImage),
+              backgroundImage: NetworkImage(userImage),
             ),
           ),
           SizedBox(
@@ -327,7 +320,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: CircularProgressIndicator(),
                 );
               }
-              var myDocuments = snapShot.data.documents;
+              var myDocuments = snapshot.data.documents;
               myDocuments.forEach((checkDocument) {
                 if (uid == checkDocument["userId"]) {
                   userImage = checkDocument["image_Url"];

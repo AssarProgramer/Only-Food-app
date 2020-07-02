@@ -205,7 +205,7 @@ class _SignUpPageState extends State<SignUpPage> {
           GestureDetector(
             onTap: () {
               getImage(
-                source: ImageSource.camera,
+                source: ImageSource.gallery,
               );
             },
             child: CircleAvatar(
