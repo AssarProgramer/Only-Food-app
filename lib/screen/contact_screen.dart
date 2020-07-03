@@ -85,29 +85,21 @@ class _ContactState extends State<Contact> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        TextFormFeild(
-                          hintText: 'Full Name',
-                          myController: fullName,
-                          keybord: TextInputType.emailAddress,
-                          myObscureText: false,
+                        MyTextFormFiled(
+                          name: "FullName",
+                          obscureText: false,
                         ),
-                        TextFormFeild(
-                          hintText: 'Email',
-                          myController: email,
-                          keybord: TextInputType.emailAddress,
-                          myObscureText: false,
+                        MyTextFormFiled(
+                          name: 'Email',
+                          obscureText: false,
                         ),
-                        TextFormFeild(
-                          hintText: 'PhoneNumber',
-                          myController: phoneNumber,
-                          keybord: TextInputType.emailAddress,
-                          myObscureText: false,
+                        MyTextFormFiled(
+                          name: "PhoneNumber",
+                          obscureText: false,
                         ),
-                        TextFormFeild(
-                          hintText: 'Your Message',
-                          myController: yourMessage,
-                          keybord: TextInputType.emailAddress,
-                          myObscureText: false,
+                         MyTextFormFiled(
+                          name: "Your Message",
+                          obscureText: false,
                         ),
                       ],
                     ),

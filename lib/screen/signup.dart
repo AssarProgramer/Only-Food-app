@@ -235,30 +235,50 @@ class _SignUpPageState extends State<SignUpPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  TextFormFeild(
-                    myObscureText: false,
-                    hintText: 'Full Name',
-                    myController: fullName,
-                    keybord: TextInputType.emailAddress,
+                     MyTextFormFiled(
+                    name: 'fullName',
+                    obscureText: false,
+                    controller: fullName,
                   ),
-                  TextFormFeild(
-                    myObscureText: false,
-                    hintText: 'Email',
-                    myController: email,
-                    keybord: TextInputType.emailAddress,
+                     MyTextFormFiled(
+                    name: 'Email',
+                    obscureText: false,
+                    controller: email,
                   ),
-                  TextFormFeild(
-                    myObscureText: true,
-                    myController: password,
-                    keybord: TextInputType.emailAddress,
-                    hintText: 'Password',
+                     MyTextFormFiled(
+                    name: 'Password',
+                    obscureText: false,
+                    controller: password,
                   ),
-                  TextFormFeild(
-                    myObscureText: false,
-                    hintText: 'Phonn Number',
-                    myController: phoneNumber,
-                    keybord: TextInputType.number,
+                     MyTextFormFiled(
+                    name: 'phoneNumber',
+                    obscureText: false,
+                    controller: phoneNumber,
                   ),
+                  // TextFormFeild(
+                  //   myObscureText: false,
+                  //   hintText: 'Full Name',
+                  //   myController: fullName,
+                  //   keybord: TextInputType.emailAddress,
+                  // ),
+                  // TextFormFeild(
+                  //   myObscureText: false,
+                  //   hintText: 'Email',
+                  //   myController: email,
+                  //   keybord: TextInputType.emailAddress,
+                  // ),
+                  // TextFormFeild(
+                  //   myObscureText: true,
+                  //   myController: password,
+                  //   keybord: TextInputType.emailAddress,
+                  //   hintText: 'Password',
+                  // ),
+                  // TextFormFeild(
+                  //   myObscureText: false,
+                  //   hintText: 'Phonn Number',
+                  //   myController: phoneNumber,
+                  //   keybord: TextInputType.number,
+                  // ),
                   GestureDetector(
                     onTap: () {
                       setState(() {
@@ -281,12 +301,17 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ),
                   ),
-                  TextFormFeild(
-                    myObscureText: false,
-                    myController: address,
-                    keybord: TextInputType.emailAddress,
-                    hintText: 'Address',
+                  MyTextFormFiled(
+                    name: 'address',
+                    obscureText: false,
+                    controller: address,
                   ),
+                  // TextFormFeild(
+                  //   myObscureText: false,
+                  //   myController: address,
+                  //   keybord: TextInputType.emailAddress,
+                  //   hintText: 'Address',
+                  // ),
                 ],
               ),
             ),

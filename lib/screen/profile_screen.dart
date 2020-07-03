@@ -1,12 +1,14 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
-import '../widgets/textform_feild.dart';
-import 'package:fajira_grosery/widgets/rasied_button.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+
+import 'dart:io';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import './home_screen.dart';
+import '../widgets/textform_feild.dart';
+import 'package:fajira_grosery/widgets/rasied_button.dart';
 
 import '../model/user.dart';
 
@@ -16,24 +18,28 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  GlobalKey<ScaffoldState> myKey = GlobalKey<ScaffoldState>();
-
-  TextEditingController addrees;
-  TextEditingController email;
+  static User userData;
   TextEditingController fullName;
+
+  TextEditingController email;
   TextEditingController phoneNumber;
 
-  User userData;
+  TextEditingController address;
+
+  File image;
   bool isMale = false;
-  bool profileCondition = false;
+  bool profileCodiction = false;
   var uid;
 
+  void inputUserData() async {
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    uid = user.uid;
+  }
+
   void checkGender() {
- 
     if (userData.gender == "Male") {
       isMale = true;
     } else {
-
       isMale = false;
     }
   }
@@ -42,63 +48,73 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Firestore.instance.collection("user").document(uid).updateData({
       "fullName": fullName.text,
       "email": email.text,
-      "addrees": addrees.text,
+      "address": address.text,
       "phoneNumber": int.parse(phoneNumber.text),
       "gender": isMale == true ? "Male" : "Female",
     });
   }
 
-  void getUserData() async {
-    final FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    uid = user.uid;
-  }
+  static Pattern pattern =
+      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 
-  // List<String> gender = ["Male", "Female"];
-  File image;
-  Future getImage({ImageSource source}) async {
-    final pickedImage = await ImagePicker().getImage(source: source);
-    setState(
-      () {
-        image = File(pickedImage.path);
-      },
-    );
-  }
+  final RegExp regex = RegExp(pattern);
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  var dropdownvalue;
   String userImage;
 
+  Future getImage({ImageSource source}) async {
+    final pickedFile = await ImagePicker().getImage(source: source);
+    setState(() {
+      image = File(pickedFile.path);
+    });
+  }
+
   void submitFunction() {
-    if (fullName.text == null) {
-      myKey.currentState.showSnackBar(
-        SnackBar(
-          content: Text('please fill fullName'),
-          backgroundColor: Theme.of(context).primaryColor,
-        ),
-      );
-    } else if (email.text.trim() == null) {
-      myKey.currentState.showSnackBar(
-        SnackBar(
-          content: Text('please fill email'),
-          backgroundColor: Theme.of(context).primaryColor,
-        ),
-      );
-    } else if (phoneNumber.text.trim() == null) {
-      myKey.currentState.showSnackBar(
-        SnackBar(
-          content: Text('please fill PhoneNumber'),
-          backgroundColor: Theme.of(context).primaryColor,
-        ),
-      );
-    } else if (addrees.text.trim() == null) {
-      myKey.currentState.showSnackBar(
-        SnackBar(
-          content: Text('please fill addrees'),
-          backgroundColor: Theme.of(context).primaryColor,
-        ),
-      );
+    if (fullName.text.trim() == null || fullName.text.isEmpty) {
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("FullName Is Empty"),
+        duration: Duration(milliseconds: 600),
+        backgroundColor: Theme.of(context).primaryColor,
+      ));
+    } else if (email.text.isEmpty || email.text.trim() == null) {
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("Email is Empty"),
+        duration: Duration(milliseconds: 600),
+        backgroundColor: Theme.of(context).primaryColor,
+      ));
+    } else if (!regex.hasMatch(email.text)) {
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("Please Try Vaild Email"),
+        duration: Duration(milliseconds: 600),
+        backgroundColor: Theme.of(context).primaryColor,
+      ));
+    } else if (phoneNumber.text.isEmpty) {
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("Phone Number is Empty"),
+        duration: Duration(milliseconds: 600),
+        backgroundColor: Theme.of(context).primaryColor,
+      ));
+    } else if (int.tryParse(phoneNumber.text) == null) {
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("Please Enter Vaild Number"),
+        duration: Duration(milliseconds: 600),
+        backgroundColor: Theme.of(context).primaryColor,
+      ));
+    } else if (int.tryParse(phoneNumber.text) < 0) {
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("Phone Number  Not Less then 0"),
+        duration: Duration(milliseconds: 600),
+        backgroundColor: Theme.of(context).primaryColor,
+      ));
+    } else if (phoneNumber.text.length < 11 || phoneNumber.text.length > 11) {
+      _scaffoldKey.currentState.showSnackBar(SnackBar(
+        content: Text("Phone number must be equal 11"),
+        duration: Duration(milliseconds: 600),
+        backgroundColor: Theme.of(context).primaryColor,
+      ));
     } else {
       setState(() {
-        profileCondition = false;
+        profileCodiction = false;
       });
       userDataUpdate();
     }
@@ -123,176 +139,133 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget secondPart() {
-    return Expanded(
-      flex: 2,
-      child: Container(
-        width: 400,
-        child: profileCondition == true
-            ? Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Container(
-                    height: 400,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        TextFormFeild(
-                          myController: fullName,
-                          keybord: TextInputType.text,
-                          hintText: 'Full Name',
-                          myObscureText: false,
-                          // myInitialValue: userData.fullName,
-                        ),
-                        TextFormFeild(
-                          myController: email,
-                          keybord: TextInputType.text,
-                          hintText: 'Email',
-                          myObscureText: false,
-                          // myInitialValue: userData.email,
-                        ),
-                        TextFormFeild(
-                          myController: phoneNumber,
-                          keybord: TextInputType.number,
-                          hintText: 'Phone Number',
-                          // myInitialValue: userData.phoneNumber.toString(),
-                          myObscureText: false,
-                        ),
-                        TextFormFeild(
-                          myController: addrees,
-                          keybord: TextInputType.text,
-                          hintText: 'address',
-                          // myInitialValue: userData.address,
-                          myObscureText: false,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              isMale = !isMale;
-                            });
-                          },
-                          child: Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: Color(0xfffde6f0),
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 19, left: 13.0),
-                              child: Text(
-                                isMale ? 'Male' : 'Female',
-                                style: TextStyle(fontSize: 16),
-                              ),
-                            ),
-                            height:
-                                MediaQuery.of(context).size.height * 0.1 - 23,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  profileCondition == true
-                      ? Container(
-                          width: double.infinity,
-                          child: RasiedButton(
-                            buttonText: 'Update',
-                            colors: Theme.of(context).primaryColor,
-                            textColors: Colors.white,
-                            whenPrassed: () {
-                              submitFunction();
-                            },
-                          ))
-                      : Container(),
-                ],
-              )
-            : Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Container(
-                    height: 400,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        textfeildContainer(
-                          textfeildName: userData.fullName,
-                        ),
-                        textfeildContainer(
-                          textfeildName: userData.email,
-                        ),
-                        textfeildContainer(
-                          textfeildName: userData.phoneNumber.toString(),
-                        ),
-                        textfeildContainer(textfeildName: userData.address),
-                        textfeildContainer(
-                          textfeildName: userData.gender.toString(),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    height: 49,
-                  ),
-                ],
-              ),
-      ),
-    );
-  }
-
-  Widget circle() {
+  Widget secountPart() {
     return Container(
-      child: Padding(
-        padding: const EdgeInsets.only(left: 140, top: 120),
-        child: CircleAvatar(
-          radius: 69,
-          backgroundColor: Colors.white,
-          child: CircleAvatar(
-            backgroundImage:
-                image == null ? NetworkImage(userImage) : FileImage(image),
-            radius: 65,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget editCircleButton() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 100, bottom: 330),
-      child: Center(
-        child: profileCondition == true
-            ? CircleAvatar(
-                backgroundColor: Colors.white,
-                radius: 18,
-                child: IconButton(
-                  icon: Icon(
-                    Icons.edit,
-                    color: Colors.black,
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      child: profileCodiction == true
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                MyTextFormFiled(
+                  name: "FullName",
+                  obscureText: false,
+                  controller: fullName,
+                ),
+                MyTextFormFiled(
+                  name: 'Email',
+                  obscureText: false,
+                  controller: email,
+                ),
+                MyTextFormFiled(
+                  name: "PhoneNumber",
+                  obscureText: false,
+                  controller: phoneNumber,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      isMale = !isMale;
+                    });
+                  },
+                  child: Container(
+                    height: 60,
+                    width: double.infinity,
+                    padding: EdgeInsets.only(left: 12),
+                    decoration: BoxDecoration(
+                      color: Color(0xfffde6f0),
+                      borderRadius: BorderRadius.circular(7),
+                    ),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        isMale ? "Male" : "Female",
+                        style:
+                            TextStyle(fontSize: 17, color: Color(0xff757173)),
+                      ),
+                    ),
                   ),
-                  onPressed: () {
-                    getImage(
-                      source: ImageSource.camera,
-                    );
-
-                    Text(
-                      "From Gallery",
-                    );
+                ),
+                MyTextFormFiled(
+                  obscureText: false,
+                  name: "Address",
+                  controller: address,
+                ),
+                RasiedButton(
+                  buttonText: 'Update',
+                  colors: Theme.of(context).primaryColor,
+                  textColors: Colors.white,
+                  whenPrassed: () {
+                    submitFunction();
                   },
                 ),
-              )
-            : Container(),
+              ],
+            )
+          : Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Container(
+                  height: 400,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      textfeildContainer(
+                        textfeildName: userData.fullName,
+                      ),
+                      textfeildContainer(
+                        textfeildName: userData.email,
+                      ),
+                      textfeildContainer(
+                        textfeildName: userData.phoneNumber.toString(),
+                      ),
+                      textfeildContainer(textfeildName: userData.address),
+                      textfeildContainer(
+                        textfeildName: userData.gender.toString(),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  height: 49,
+                ),
+              ],
+            ),
+    );
+  }
+
+  Widget topImage() {
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(bottom: 360),
+            child: CircleAvatar(
+              radius: 75,
+              backgroundColor: Colors.white,
+              child: CircleAvatar(
+                radius: 70,
+                backgroundImage: image == null
+                    ? AssetImage("images/tonyprofile.jpg")
+                    : FileImage(image),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    getUserData();
+    inputUserData();
+
     return Scaffold(
-      key: myKey,
       resizeToAvoidBottomInset: false,
+      key: _scaffoldKey,
       appBar: AppBar(
-        leading: profileCondition == false
+        leading: profileCodiction == false
             ? IconButton(
                 icon: Icon(
                   Icons.arrow_back,
@@ -308,7 +281,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 onPressed: () {
                   setState(() {
-                    profileCondition = false;
+                    profileCodiction = false;
                   });
                 },
               ),
@@ -327,7 +300,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onPressed: () {
               setState(
                 () {
-                  profileCondition = true;
+                  profileCodiction = true;
                 },
               );
             },
@@ -335,60 +308,80 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
       ),
       body: StreamBuilder(
-        stream: Firestore.instance.collection("user").snapshots(),
-        builder: (ctx, snapShot) {
-          if (snapShot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          var myDocuments = snapShot.data.documents;
-
-          myDocuments.forEach((checkDocument) {
-            if (uid == checkDocument["userId"]) {
-              userData = User(
-                email: checkDocument['email'],
-                fullName: checkDocument['fullName'],
-                phoneNumber: checkDocument['phoneNumber'],
-                address: checkDocument['address'],
-                gender: checkDocument['gender'],
-                myImage: null,
-              );
-              userImage = checkDocument["image_Url"];
-              fullName = TextEditingController(text: userData.fullName);
-              email = TextEditingController(text: userData.email);
-              phoneNumber =
-                  TextEditingController(text: userData.phoneNumber.toString());
-              addrees = TextEditingController(text: userData.address);
+          stream: Firestore.instance.collection("user").snapshots(),
+          builder: (ctx, snapShot) {
+            if (snapShot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
             }
-          });
+            var myDocument = snapShot.data.documents;
+            myDocument.forEach((checkDocument) {
+              if (uid == checkDocument["userId"]) {
+                userData = User(
+                    email: checkDocument['email'],
+                    address: checkDocument["address"],
+                    gender: checkDocument["gender"],
+                    myImage: null,
+                    fullName: checkDocument["fullName"],
+                    phoneNumber: checkDocument["phoneNumber"]);
+                userImage = checkDocument["image_Url"];
+                phoneNumber = TextEditingController(
+                    text: userData.phoneNumber.toString());
+                fullName = TextEditingController(text: userData.fullName);
+                email = TextEditingController(text: userData.email);
+                address = TextEditingController(text: userData.address);
+              }
+            });
 
-          return Container(
-            child: Container(
-              width: double.infinity,
+            return Container(
               height: double.infinity,
+              width: double.infinity,
               child: Stack(
                 children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      Expanded(
-                        flex: 1,
-                        child: Container(
-                          width: double.infinity,
-                          color: Theme.of(context).primaryColor,
+                  Container(
+                    height: double.infinity,
+                    width: double.infinity,
+                    child: Column(
+                      children: <Widget>[
+                        Expanded(
+                          child: Container(
+                            width: double.infinity,
+                            color: Theme.of(context).primaryColor,
+                            padding: EdgeInsets.only(bottom: 10),
+                            child: Container(
+                              height: double.infinity,
+                              width: double.infinity,
+                            ),
+                          ),
                         ),
-                      ),
-                      secondPart(),
-                    ],
+                        Expanded(
+                          flex: 2,
+                          child: secountPart(),
+                        )
+                      ],
+                    ),
                   ),
-                  circle(),
-                  editCircleButton(),
+                  topImage(),
+                  profileCodiction == true
+                      ? Padding(
+                          padding: EdgeInsets.only(bottom: 300, left: 130),
+                          child: Center(
+                              child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 19,
+                            child: IconButton(
+                                icon: Icon(
+                                  Icons.edit,
+                                  color: Colors.black,
+                                ),
+                                onPressed: () {
+                                  getImage(source: ImageSource.camera);
+                                },),
+                          ),),)
+                      : Container(),
                 ],
               ),
-            ),
-          );
-        },
-      ),
+            );
+          },),
     );
   }
 }
