@@ -1,15 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fajira_grosery/widgets/my_text_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import './login_page.dart';
-import '../widgets/textform_feild.dart';
 import '../widgets/rasied_button.dart';
 import '../widgets/flat_button.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import '../model/user.dart';
+import 'package:path/path.dart' as Path;
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -26,6 +27,23 @@ class _SignUpPageState extends State<SignUpPage> {
     setState(() {
       isImage = File(pickedImage.path);
     });
+  }
+
+  Future<Map<String, String>> _uploadFile(File _image) async {
+    String _imagePath = _image.path;
+
+    StorageReference storageReference = FirebaseStorage.instance
+        .ref()
+        .child('images/${(Path.basename(_imagePath))}');
+    StorageUploadTask uploadTask = storageReference.putFile(_image);
+    StorageTaskSnapshot task = await uploadTask.onComplete;
+    final String _imageUrl = (await task.ref.getDownloadURL());
+
+    Map<String, String> _downloadData = {
+      'imagePath': Path.basename(_imagePath),
+      'imageUrl': _imageUrl
+    };
+    return _downloadData;
   }
 
   static Pattern pattern =
@@ -52,21 +70,16 @@ class _SignUpPageState extends State<SignUpPage> {
         email: email.text,
         password: password.text,
       );
-
+      var imageMap = await _uploadFile(isImage);
       User user = User(
-        myImage: isImage,
+        myImage: imageMap["imageUrl"],
+        imagePath: imageMap["imagePath"],
         email: email.text,
         fullName: fullName.text,
         phoneNumber: int.parse(phoneNumber.text),
         address: address.text,
         gender: isMale ? 'Male' : 'Famale',
       );
-      final ref = FirebaseStorage.instance
-          .ref()
-          .child('User_image')
-          .child(authResult.user.uid + '.jpg');
-      await ref.putFile(isImage).onComplete;
-      final url = await ref.getDownloadURL();
 
       await Firestore.instance
           .collection('user')
@@ -77,9 +90,10 @@ class _SignUpPageState extends State<SignUpPage> {
           'phoneNumber': user.phoneNumber,
           'fullName': user.fullName,
           'gender': user.gender,
-          "userId":authResult.user.uid,
+          "userId": authResult.user.uid,
           'address': user.address,
-          'image_Url': url,
+          "UserImage": user.myImage,
+          "UserPath": user.imagePath,
         },
       );
     } on PlatformException catch (err) {
@@ -205,7 +219,7 @@ class _SignUpPageState extends State<SignUpPage> {
           GestureDetector(
             onTap: () {
               getImage(
-                source: ImageSource.gallery,
+                source: ImageSource.camera,
               );
             },
             child: CircleAvatar(
@@ -235,22 +249,22 @@ class _SignUpPageState extends State<SignUpPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                     MyTextFormFiled(
+                  MyTextField(
                     name: 'fullName',
                     obscureText: false,
                     controller: fullName,
                   ),
-                     MyTextFormFiled(
+                  MyTextField(
                     name: 'Email',
                     obscureText: false,
                     controller: email,
                   ),
-                     MyTextFormFiled(
+                  MyTextField(
                     name: 'Password',
                     obscureText: false,
                     controller: password,
                   ),
-                     MyTextFormFiled(
+                  MyTextField(
                     name: 'phoneNumber',
                     obscureText: false,
                     controller: phoneNumber,
@@ -301,7 +315,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                     ),
                   ),
-                  MyTextFormFiled(
+                  MyTextField(
                     name: 'address',
                     obscureText: false,
                     controller: address,

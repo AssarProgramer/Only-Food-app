@@ -1,5 +1,5 @@
+import 'package:fajira_grosery/widgets/my_text_field.dart';
 import 'package:fajira_grosery/widgets/rasied_button.dart';
-import 'package:fajira_grosery/widgets/textform_feild.dart';
 import 'package:flutter/material.dart';
 
 class Contact extends StatefulWidget {
@@ -85,19 +85,19 @@ class _ContactState extends State<Contact> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        MyTextFormFiled(
+                        MyTextField(
                           name: "FullName",
                           obscureText: false,
                         ),
-                        MyTextFormFiled(
+                        MyTextField(
                           name: 'Email',
                           obscureText: false,
                         ),
-                        MyTextFormFiled(
+                        MyTextField(
                           name: "PhoneNumber",
                           obscureText: false,
                         ),
-                         MyTextFormFiled(
+                         MyTextField(
                           name: "Your Message",
                           obscureText: false,
                         ),

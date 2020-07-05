@@ -2,7 +2,7 @@ import 'package:fajira_grosery/widgets/rasied_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import './signup.dart';
-import '../widgets/textform_feild.dart';
+import '../widgets/my_text_field.dart';
 import '../widgets/flat_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -71,12 +71,12 @@ class _LoginPageState extends State<LoginPage> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
-           MyTextFormFiled(
+           MyTextField(
                     name: 'Email',
                     obscureText: false,
                     controller: email,
                   ),
-                     MyTextFormFiled(
+                     MyTextField(
                     name: 'Password',
                     obscureText: false,
                     controller: password

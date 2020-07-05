@@ -69,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
             child: CircleAvatar(
               backgroundColor: Colors.red,
               maxRadius: 45,
-              backgroundImage: NetworkImage(userImage),
+              backgroundImage: NetworkImage(userImage!=null?userImage:''),
             ),
           ),
           SizedBox(
@@ -323,7 +323,7 @@ class _HomeScreenState extends State<HomeScreen> {
               var myDocuments = snapshot.data.documents;
               myDocuments.forEach((checkDocument) {
                 if (uid == checkDocument["userId"]) {
-                  userImage = checkDocument["image_Url"];
+                  userImage = checkDocument["UserImage"];
                 }
               });
 

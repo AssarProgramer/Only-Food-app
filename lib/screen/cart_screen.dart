@@ -2,6 +2,18 @@ import 'package:fajira_grosery/widgets/rasied_button.dart';
 import 'package:flutter/material.dart';
 
 class CartScreen extends StatelessWidget {
+  final String foodImage;
+  final String foodName;
+  final String foodType;
+  final double foodPrice;
+  final int foodCount;
+  CartScreen(
+      {this.foodPrice,
+      this.foodCount,
+      this.foodImage,
+      this.foodName,
+      this.foodType});
+
   Widget cartContainer(context) {
     return Card(
       child: Container(
@@ -17,9 +29,11 @@ class CartScreen extends StatelessWidget {
           title: Container(
             child: Row(
               children: <Widget>[
-                SizedBox(width: 15,),
+                SizedBox(
+                  width: 15,
+                ),
                 Text(
-                  '1x ',
+                  '${foodCount.toString()} ',
                   style: TextStyle(color: Color(0xffc1c6cb), fontSize: 20),
                 ),
                 SizedBox(
@@ -30,12 +44,12 @@ class CartScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       Text(
-                        'Pasta Cheese ',
+                        '${foodName.toString()}',
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 20),
                       ),
                       Text(
-                        '7 Ocean Hotal ',
+                        '${foodType.toString()}',
                         style:
                             TextStyle(color: Color(0xffc1c6cb), fontSize: 20),
                       ),
@@ -49,7 +63,7 @@ class CartScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                '\$50',
+                '\$${foodPrice.toString()}',
                 style: TextStyle(
                     color: Theme.of(context).accentColor,
                     fontSize: 20,
@@ -103,9 +117,10 @@ class CartScreen extends StatelessWidget {
                     context,
                   ),
                   cartContainer(
+                    
                     context,
                   ),
-                   cartContainer(
+                  cartContainer(
                     context,
                   ),
                 ],
