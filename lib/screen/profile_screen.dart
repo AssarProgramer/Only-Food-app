@@ -41,7 +41,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         "address": address,
         "phoneNumber": int.parse(phoneNumber),
         "gender": gender,
-        "UserImage": imageMap,
+        "UserImage": image == null ? user.myImage : imageMap,
       },
     );
   }
@@ -72,7 +72,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: CircleAvatar(
                 radius: 70,
                 backgroundImage: image == null
-                    ? NetworkImage(user.myImage == null ? '' : user.myImage)
+                    ? NetworkImage(user.myImage)
                     : FileImage(image),
               ),
             ),
@@ -135,33 +135,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
           )
         ],
       ),
-      body: Container(
-        height: double.infinity,
-        width: double.infinity,
-        child: StreamBuilder(
-          stream: Firestore.instance.collection("user").snapshots(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            }
-            var myDocument = snapshot.data.documents;
-            getUserId();
-            myDocument.forEach(
-              (checkDocument) {
-                if (uid == checkDocument["userId"]) {
-                  user = User(
-                    imagePath: checkDocument["UserPath"],
-                    email: checkDocument['email'],
-                    address: checkDocument["address"],
-                    gender: checkDocument["gender"],
-                    fullName: checkDocument["fullName"],
-                    phoneNumber: checkDocument["phoneNumber"],
-                    myImage: checkDocument["UserImage"],
-                  );
-                }
-              },
-            );
-            return Stack(
+      body: StreamBuilder(
+        stream: Firestore.instance.collection("user").snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          var myDocument = snapshot.data.documents;
+
+          getUserId();
+          myDocument.forEach(
+            (checkDocument) {
+              if (uid == checkDocument["userId"]) {
+                user = User(
+                  imagePath: checkDocument["UserPath"],
+                  email: checkDocument['email'],
+                  address: checkDocument["address"],
+                  gender: checkDocument["gender"],
+                  fullName: checkDocument["fullName"],
+                  phoneNumber: checkDocument["phoneNumber"],
+                  myImage: checkDocument["UserImage"],
+                );
+              }
+            },
+          );
+
+          return Container(
+            height: double.infinity,
+            width: double.infinity,
+            child: Stack(
               children: <Widget>[
                 Container(
                   height: double.infinity,
@@ -173,30 +176,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         width: double.infinity,
                         color: Theme.of(context).primaryColor,
                       ),
-                      // StreamBuilder(
-                      //   stream: Firestore.instance.collection("user").snapshots(),
-                      //   builder: (context, snapshot) {
-                      //     if (snapshot.connectionState == ConnectionState.waiting) {
-                      //       return Center(child: CircularProgressIndicator());
-                      //     }
-                      //     var myDocument = snapshot.data.documents;
-                      //     getUserId();
-                      //     myDocument.forEach(
-                      //       (checkDocument) {
-                      //         if (uid == checkDocument["userId"]) {
-                      //           user = User(
-                      //             imagePath: checkDocument["UserPath"],
-                      //             email: checkDocument['email'],
-                      //             address: checkDocument["address"],
-                      //             gender: checkDocument["gender"],
-                      //             fullName: checkDocument["fullName"],
-                      //             phoneNumber: checkDocument["phoneNumber"],
-                      //             myImage: checkDocument["UserImage"],
-                      //           );
-                      //         }
-                      //       },
-                      //     );
-                      //     return
                       Expanded(
                         flex: 2,
                         child: editMode
@@ -234,9 +213,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
               ],
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }

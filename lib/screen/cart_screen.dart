@@ -1,20 +1,28 @@
 import 'package:fajira_grosery/widgets/rasied_button.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../provider/myprovider.dart';
 
-class CartScreen extends StatelessWidget {
-  final String foodImage;
-  final String foodName;
-  final String foodType;
-  final double foodPrice;
-  final int foodCount;
-  CartScreen(
-      {this.foodPrice,
-      this.foodCount,
-      this.foodImage,
-      this.foodName,
-      this.foodType});
+class CartScreen extends StatefulWidget {
+  @override
+  _CartScreenState createState() => _CartScreenState();
+}
 
-  Widget cartContainer(context) {
+class _CartScreenState extends State<CartScreen> {
+  MyProvider provider;
+  double foodTotalPrice;
+  @override
+  void initState() {
+    super.initState();
+    MyProvider provider = Provider.of(context, listen: false);
+    provider.allCartProduct.forEach((element) { 
+      foodTotalPrice = element.foodPrice;
+    });
+    print(foodTotalPrice);
+  }
+
+  Widget cartContainer(BuildContext context, int index) {
+    var allCartProduct = provider.allCartProductList;
     return Card(
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 13),
@@ -22,7 +30,7 @@ class CartScreen extends StatelessWidget {
         child: ListTile(
           leading: Container(
             child: CircleAvatar(
-              backgroundImage: AssetImage('images/pastascheese3.jpg'),
+              backgroundImage: NetworkImage(allCartProduct[index].foodImage),
               radius: 30,
             ),
           ),
@@ -33,7 +41,7 @@ class CartScreen extends StatelessWidget {
                   width: 15,
                 ),
                 Text(
-                  '${foodCount.toString()} ',
+                  '${allCartProduct[index].foodQuantity}x',
                   style: TextStyle(color: Color(0xffc1c6cb), fontSize: 20),
                 ),
                 SizedBox(
@@ -44,12 +52,12 @@ class CartScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       Text(
-                        '${foodName.toString()}',
+                        '${allCartProduct[index].foodName}',
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 20),
                       ),
                       Text(
-                        '${foodType.toString()}',
+                        '${allCartProduct[index].foodType}',
                         style:
                             TextStyle(color: Color(0xffc1c6cb), fontSize: 20),
                       ),
@@ -63,7 +71,7 @@ class CartScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                '\$${foodPrice.toString()}',
+                '\$${allCartProduct[index].foodPrice}',
                 style: TextStyle(
                     color: Theme.of(context).accentColor,
                     fontSize: 20,
@@ -76,8 +84,51 @@ class CartScreen extends StatelessWidget {
     );
   }
 
+  Widget bottomPart() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).primaryColor,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  'Total',
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
+                Text(
+                  '\$350',
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                )
+              ],
+            ),
+            RasiedButton(
+              colors: Colors.white,
+              buttonText: 'Submit',
+              textColors: Theme.of(context).primaryColor,
+              whenPrassed: () {},
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    provider = Provider.of<MyProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
@@ -99,75 +150,15 @@ class CartScreen extends StatelessWidget {
           Expanded(
             flex: 3,
             child: Container(
-              child: ListView(
-                children: <Widget>[
-                  cartContainer(
-                    context,
-                  ),
-                  cartContainer(
-                    context,
-                  ),
-                  cartContainer(
-                    context,
-                  ),
-                  cartContainer(
-                    context,
-                  ),
-                  cartContainer(
-                    context,
-                  ),
-                  cartContainer(
-                    
-                    context,
-                  ),
-                  cartContainer(
-                    context,
-                  ),
-                ],
+              child: ListView.builder(
+                itemBuilder: cartContainer,
+                itemCount: provider.cartProductList,
               ),
             ),
           ),
           Expanded(
             flex: 1,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
-              ),
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Text(
-                          'Total',
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
-                        ),
-                        Text(
-                          '\$350',
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
-                        )
-                      ],
-                    ),
-                    RasiedButton(
-                      colors: Colors.white,
-                      buttonText: 'Submit',
-                      textColors: Theme.of(context).primaryColor,
-                      whenPrassed: () {},
-                    )
-                  ],
-                ),
-              ),
-            ),
+            child: bottomPart(),
           ),
         ],
       ),

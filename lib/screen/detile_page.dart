@@ -1,6 +1,8 @@
 import 'package:fajira_grosery/screen/cart_screen.dart';
 import 'package:flutter/material.dart';
 import '../widgets/rasied_button.dart';
+import 'package:provider/provider.dart';
+import '../provider/myprovider.dart';
 
 class DetilePage extends StatefulWidget {
   final String foodImage;
@@ -21,6 +23,7 @@ class DetilePage extends StatefulWidget {
 class _DetilePageState extends State<DetilePage> {
   int value = 1;
   double total;
+
   Widget addButton() {
     return Container(
       width: 357,
@@ -29,9 +32,11 @@ class _DetilePageState extends State<DetilePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              total != null
-                  ? Text(total.toString())
-                  : Text('${widget.foodPrice.toString()}'),
+              Text(
+                '${total == null ? widget.foodPrice.toString() : total.toString()}',
+                style: TextStyle(
+                    color: Theme.of(context).accentColor, fontSize: 20),
+              ),
               // Text(
               //   // '\$${widget.foodPrice.toString()}',
               //   style: TextStyle(
@@ -190,6 +195,7 @@ class _DetilePageState extends State<DetilePage> {
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<MyProvider>(context);
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -248,15 +254,17 @@ class _DetilePageState extends State<DetilePage> {
                               colors: Theme.of(context).primaryColor,
                               buttonText: 'Submit',
                               whenPrassed: () {
+                                provider.addCartProduct(
+                                  foodQuantity: value,
+                                  foodImage: widget.foodImage,
+                                  foodName: widget.foodName,
+                                  foodPrice:
+                                      total == null ? widget.foodPrice : total,
+                                  foodType: widget.foodType,
+                                );
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (context) => CartScreen(
-                                      foodCount: 2,
-                                      foodImage: widget.foodImage,
-                                      foodName: widget.foodName,
-                                      foodPrice: total,
-                                      foodType: widget.foodType,
-                                    ),
+                                    builder: (context) => CartScreen(),
                                   ),
                                 );
                               },
