@@ -292,10 +292,19 @@ class _DetilePageState extends State<DetilePage> {
                 ),
               ),
               Container(
-                padding: EdgeInsets.only(left: 90, top: 20),
-                child: CircleAvatar(
-                  maxRadius: 140,
-                  backgroundImage: NetworkImage(widget.foodImage),
+                width: double.infinity,
+                height: 200,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.only(top: 20),
+                      child: CircleAvatar(
+                        radius: 80,
+                        backgroundImage: NetworkImage(widget.foodImage),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],

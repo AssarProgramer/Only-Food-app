@@ -321,11 +321,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               }
               var myDocuments = snapshot.data.documents;
-              myDocuments.forEach((checkDocument) {
-                if (uid == checkDocument["userId"]) {
-                  userImage = checkDocument["UserImage"];
-                }
-              });
+              myDocuments.forEach(
+                (checkDocument) {
+                  if (uid == checkDocument["userId"]) {
+                    userImage = checkDocument["UserImage"];
+                  }
+                },
+              );
 
               return Container(
                 width: double.infinity,
@@ -341,7 +343,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: <Widget>[
                           Container(
                             height: mediaQueryData.size.height * 0.2 + 50,
-                            // height: MediaQuery.of(context).size.height * 0.1 + 50,
+                            //  height: MediaQuery.of(context).size.height * 0.1 + 50,
                             child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               child: Container(

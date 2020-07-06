@@ -240,7 +240,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Widget secoundPart() {
     return Container(
-      height: MediaQuery.of(context).size.height * 0.5 + 25,
+      height:450,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[

@@ -89,6 +89,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    getUserId();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       key: _scaffoldKey,
@@ -144,7 +145,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
           var myDocument = snapshot.data.documents;
 
-          getUserId();
           myDocument.forEach(
             (checkDocument) {
               if (uid == checkDocument["userId"]) {
@@ -171,10 +171,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   width: double.infinity,
                   child: Column(
                     children: <Widget>[
-                      Container(
-                        height: 245,
-                        width: double.infinity,
-                        color: Theme.of(context).primaryColor,
+                      Expanded(
+                        flex: 1,
+                        child: Container(
+                          width: double.infinity,
+                          color: Theme.of(context).primaryColor,
+                        ),
                       ),
                       Expanded(
                         flex: 2,
