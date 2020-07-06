@@ -10,16 +10,16 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   MyProvider provider;
-  double foodTotalPrice;
-  @override
-  void initState() {
-    super.initState();
-    MyProvider provider = Provider.of(context, listen: false);
-    provider.allCartProduct.forEach((element) { 
-      foodTotalPrice = element.foodPrice;
-    });
-    print(foodTotalPrice);
-  }
+  double foodTotalPrice = 0.0;
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   MyProvider provider = Provider.of(context, listen: false);
+  //   provider.allCartProduct.forEach((element) {
+  //     foodTotalPrice = element.foodPrice;
+  //   });
+  //   print(foodTotalPrice);
+  // }
 
   Widget cartContainer(BuildContext context, int index) {
     var allCartProduct = provider.allCartProductList;
@@ -105,7 +105,7 @@ class _CartScreenState extends State<CartScreen> {
                       color: Colors.white),
                 ),
                 Text(
-                  '\$350',
+                  '\$$foodTotalPrice',
                   style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -128,6 +128,13 @@ class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     provider = Provider.of<MyProvider>(context);
+
+    var getTotalPrice = provider.allCartProduct;
+    getTotalPrice.forEach(
+      (element) {
+        foodTotalPrice += element.foodPrice;
+      },
+    );
 
     return Scaffold(
       appBar: AppBar(

@@ -28,7 +28,7 @@ class _ProfileEditState extends State<ProfileEdit> {
 
   TextEditingController address;
 
-  String gender = 'Male';
+  String gender = 'Female';
 
   @override
   void initState() {
@@ -51,7 +51,7 @@ class _ProfileEditState extends State<ProfileEdit> {
 
   void checkGender() {
     setState(() {
-      gender == 'Male' ? gender = 'Female' : gender = 'Male';
+      gender == 'Female' ? gender = 'Male' : gender = 'Female';
     });
   }
 

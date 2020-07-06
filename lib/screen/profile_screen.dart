@@ -17,6 +17,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   static User user;
   bool editMode = false;
   File image;
+  File camaraImage;
   var uid;
   Future<String> _uploadFile(File _image) async {
     StorageReference storageReference =
@@ -50,12 +51,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   String userImage;
 
-  Future getImage({ImageSource source}) async {
-    final pickedFile = await ImagePicker().getImage(source: source);
+  Future getImage(bool iscamera) async {
+    if (iscamera) {
+      image = await ImagePicker.pickImage(source: ImageSource.camera);
+    } else {
+      image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    }
     setState(() {
-      image = File(pickedFile.path);
+      camaraImage = image;
     });
   }
+
+  // Future getImage({ImageSource source}) async {
+  //   final pickedFile = await ImagePicker().getImage(source: source);
+  //   setState(() {
+  //     image = File(pickedFile.path);
+  //   });
+  // }
 
   Widget topImage() {
     return Container(
@@ -85,6 +97,77 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void getUserId() async {
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
     uid = user.uid;
+  }
+
+  Widget editCircle() {
+    return Padding(
+      padding: EdgeInsets.only(bottom: 300, left: 130),
+      child: Center(
+        child: editMode == true
+            ? CircleAvatar(
+                backgroundColor: Colors.white,
+                radius: 19,
+                child: IconButton(
+                  onPressed: () {
+                    showDialog<void>(
+                      context: context,
+                      barrierDismissible: false, // user must tap button!
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: Text('Choice Your Option'),
+                          content: SingleChildScrollView(
+                            child: ListBody(
+                              children: <Widget>[
+                                Row(
+                                  children: <Widget>[
+                                    IconButton(
+                                        icon: Icon(Icons.camera_alt),
+                                        onPressed: () {
+                                          getImage(true);
+                                        }),
+                                    Text("From Camera"),
+                                  ],
+                                ),
+                                Row(
+                                  children: <Widget>[
+                                    IconButton(
+                                        icon: Icon(Icons.photo_album),
+                                        onPressed: () {
+                                          getImage(false);
+                                        }),
+                                    Text(
+                                      "From Gallery",
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ),
+                          actions: <Widget>[
+                            FlatButton(
+                              child: Text('Ok'),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+
+                    // getImage(
+                    //   source: ImageSource.camera,
+                    // );
+                  },
+                  icon: Icon(
+                    Icons.edit,
+                    color: Colors.black,
+                  ),
+                ),
+              )
+            : Container(),
+      ),
+    );
   }
 
   @override
@@ -192,28 +275,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 topImage(),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 300, left: 130),
-                  child: Center(
-                    child: editMode == true
-                        ? CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 19,
-                            child: IconButton(
-                              onPressed: () {
-                                getImage(
-                                  source: ImageSource.camera,
-                                );
-                              },
-                              icon: Icon(
-                                Icons.edit,
-                                color: Colors.black,
-                              ),
-                            ),
-                          )
-                        : Container(),
-                  ),
-                ),
+                editCircle(),
               ],
             ),
           );

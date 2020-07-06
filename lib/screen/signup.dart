@@ -130,55 +130,50 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  void submitFunction() {
+  void checkValid() {
     if (isImage == null) {
-      myKey.currentState.showSnackBar(
-        SnackBar(
-          content: Text('please Fill Image Photo'),
-          backgroundColor: Theme.of(context).primaryColor,
-        ),
-      );
-    } else if (fullName.text.isEmpty || fullName.text.trim() == null) {
-      myKey.currentState.showSnackBar(
-        SnackBar(
-          content: Text('please fill fullName'),
-          backgroundColor: Theme.of(context).primaryColor,
-        ),
-      );
+      myKey.currentState.showSnackBar(SnackBar(
+        content: Text("Photo Is Empty"),
+        duration: Duration(milliseconds: 600),
+        backgroundColor: Theme.of(context).primaryColor,
+      ));
+    }
+    if (fullName.text.trim() == null || fullName.text.isEmpty) {
+      myKey.currentState.showSnackBar(SnackBar(
+        content: Text("FullName Is Empty"),
+        duration: Duration(milliseconds: 600),
+        backgroundColor: Theme.of(context).primaryColor,
+      ));
     } else if (email.text.isEmpty || email.text.trim() == null) {
-      myKey.currentState.showSnackBar(
-        SnackBar(
-          content: Text('please fill email'),
-          backgroundColor: Theme.of(context).primaryColor,
-        ),
-      );
+      myKey.currentState.showSnackBar(SnackBar(
+        content: Text("Email is Empty"),
+        duration: Duration(milliseconds: 600),
+        backgroundColor: Theme.of(context).primaryColor,
+      ));
     } else if (!regex.hasMatch(email.text)) {
-      myKey.currentState.showSnackBar(
-        SnackBar(
-          content: Text("Please Try Vaild Email"),
-        ),
-      );
-    } else if (phoneNumber.text.isEmpty || phoneNumber.text.trim() == null) {
-      myKey.currentState.showSnackBar(
-        SnackBar(
-          content: Text('please fill PhoneNumber'),
-          backgroundColor: Theme.of(context).primaryColor,
-        ),
-      );
-    } else if (password.text.isEmpty || password.text.trim() == null) {
-      myKey.currentState.showSnackBar(
-        SnackBar(
-          content: Text('please fill password'),
-          backgroundColor: Theme.of(context).primaryColor,
-        ),
-      );
-    } else if (address.text.isEmpty || address.text == null) {
-      myKey.currentState.showSnackBar(
-        SnackBar(
-          content: Text('please fill Address'),
-          backgroundColor: Theme.of(context).primaryColor,
-        ),
-      );
+      myKey.currentState.showSnackBar(SnackBar(
+        content: Text("Please Try Vaild Email"),
+        duration: Duration(milliseconds: 600),
+        backgroundColor: Theme.of(context).primaryColor,
+      ));
+    } else if (phoneNumber.text.isEmpty) {
+      myKey.currentState.showSnackBar(SnackBar(
+        content: Text("Phone Number is Empty"),
+        duration: Duration(milliseconds: 600),
+        backgroundColor: Theme.of(context).primaryColor,
+      ));
+    } else if (int.tryParse(phoneNumber.text) == null) {
+      myKey.currentState.showSnackBar(SnackBar(
+        content: Text("Please Enter Vaild Number"),
+        duration: Duration(milliseconds: 600),
+        backgroundColor: Theme.of(context).primaryColor,
+      ));
+    } else if (int.tryParse(phoneNumber.text) < 0) {
+      myKey.currentState.showSnackBar(SnackBar(
+        content: Text("Phone Number  Not Less then 0"),
+        duration: Duration(milliseconds: 600),
+        backgroundColor: Theme.of(context).primaryColor,
+      ));
     } else {
       submit();
     }
@@ -240,7 +235,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Widget secoundPart() {
     return Container(
-      height:450,
+      height: 450,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
@@ -345,7 +340,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   colors: Theme.of(context).primaryColor,
                   buttonText: 'SignUp',
                   whenPrassed: () {
-                    submitFunction();
+                    checkValid();
                   },
                 )
               : CircularProgressIndicator(

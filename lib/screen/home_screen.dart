@@ -107,7 +107,10 @@ class _HomeScreenState extends State<HomeScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           TextFormField(
+            cursorColor: Colors.red,
             decoration: InputDecoration(
+              focusColor: Colors.red,
+              hoverColor: Colors.red,
               border: OutlineInputBorder(
                 borderSide: BorderSide.none,
                 borderRadius: BorderRadius.circular(10.0),
@@ -152,7 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget drawerColumn({String name, IconData icon, Function whenPreesed}) {
+  Widget listTile({String name, IconData icon, Function whenPreesed}) {
     return Container(
       decoration: BoxDecoration(
           color: Colors.white, borderRadius: BorderRadius.circular(10)),
@@ -178,118 +181,281 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    getUserImage();
-    MediaQueryData mediaQueryData = MediaQuery.of(context);
-    return Scaffold(
-      drawer: Container(
-        color: Colors.red,
-        child: Drawer(
-          child: SafeArea(
-            child: Container(
-              color: Color(0xfff8f8f8),
-              child: ListView(
-                children: <Widget>[
-                  Container(
-                    height: 80,
-                    child: DrawerHeader(
-                      child: Column(
-                        children: <Widget>[
-                          Container(
-                            child: Text(
-                              'tesste',
-                              style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 25),
-                            ),
-                          ),
-                        ],
-                      ),
+  Widget callingPizza() {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.2 + 50,
+      //  height: MediaQuery.of(context).size.height * 0.1 + 50,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Container(
+          child: Row(
+            children: <Widget>[
+              plzza(
+                whenPreesed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => CatagoryProtect(),
                     ),
-                  ),
-                  drawerColumn(
-                      icon: Icons.home,
-                      name: 'Home',
-                      whenPreesed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => HomeScreen(),
-                          ),
-                        );
-                      }),
-                  drawerColumn(
-                      icon: Icons.add_shopping_cart,
-                      name: 'Cart',
-                      whenPreesed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => CartScreen(),
-                          ),
-                        );
-                      }),
-                  drawerColumn(
-                    icon: Icons.location_on,
-                    name: 'Address',
-                  ),
-                  drawerColumn(
-                    icon: Icons.notifications_none,
-                    name: 'Notifications',
-                  ),
-                  drawerColumn(
-                    icon: Icons.perm_identity,
-                    name: 'Profile',
-                    whenPreesed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => ProfileScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                  drawerColumn(
-                    icon: Icons.perm_identity,
-                    name: 'Orders',
-                  ),
-                  Divider(
-                    color: Color(0xffe5dddd),
-                  ),
-                  drawerColumn(
-                    icon: Icons.info_outline,
-                    name: 'About',
-                    whenPreesed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => AboutScreen(),
-                        ),
-                      );
-                    },
-                  ),
-                  drawerColumn(
-                    icon: Icons.phone,
-                    name: 'Contact',
-                    whenPreesed: () {
-                      Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => Contact()));
-                    },
-                  ),
-                  Divider(
-                    color: Color(0xffe5dddd),
-                  ),
-                  drawerColumn(
-                    icon: Icons.exit_to_app,
-                    name: 'Logout',
-                    whenPreesed: () {
-                      FirebaseAuth.instance.signOut();
-                    },
-                  ),
-                ],
+                  );
+                },
+                foodImage: 'images/pizza1.png',
+                foodName: 'pastas',
               ),
+              plzza(
+                foodImage: 'images/salads.png',
+                foodName: 'GreenTea',
+                whenPreesed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => CatagoryProtect(),
+                    ),
+                  );
+                },
+              ),
+              plzza(
+                foodImage: 'images/salads.png',
+                foodName: 'GreenTea',
+                whenPreesed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => CatagoryProtect(),
+                    ),
+                  );
+                },
+              ),
+              plzza(
+                foodImage: 'images/salads.png',
+                foodName: 'GreenTea',
+                whenPreesed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => CatagoryProtect(),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget callingBottomPart() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: <Widget>[
+          FeaturedContainer(
+            foodImage: food.foodImage,
+            foodName: food.foodName,
+            foodPrice: food.foodPrice,
+            foodType: food.foodType,
+            foodRating: food.foodRating,
+            whenPreesd: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => DetilePage(
+                    foodImage: food.foodImage,
+                    foodName: food.foodName,
+                    foodPrice: food.foodPrice,
+                    foodType: food.foodType,
+                  ),
+                ),
+              );
+            },
+          ),
+          FeaturedContainer(
+            foodImage: food.foodImage,
+            foodName: food.foodName,
+            foodPrice: food.foodPrice,
+            foodType: food.foodType,
+            foodRating: food.foodRating,
+            whenPreesd: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => DetilePage(
+                    foodImage: food.foodImage,
+                    foodName: food.foodName,
+                    foodPrice: food.foodPrice,
+                    foodType: food.foodType,
+                  ),
+                ),
+              );
+            },
+          ),
+          FeaturedContainer(
+            foodImage: food.foodImage,
+            foodName: food.foodName,
+            foodPrice: food.foodPrice,
+            foodType: food.foodType,
+            foodRating: food.foodRating,
+            whenPreesd: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => DetilePage(
+                    foodImage: food.foodImage,
+                    foodName: food.foodName,
+                    foodPrice: food.foodPrice,
+                    foodType: food.foodType,
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget viewAll() {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 15),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text(
+            'Featured',
+            style: TextStyle(
+                fontSize: 23,
+                color: Theme.of(context).accentColor,
+                fontWeight: FontWeight.bold),
+          ),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => CatagoryProtect()),
+              );
+            },
+            child: Text(
+              'View All',
+              style: TextStyle(fontSize: 17, color: Color(0xff04d4ee)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget drawerHeader() {
+    return Container(
+      height: 80,
+      child: DrawerHeader(
+        child: Column(
+          children: <Widget>[
+            Container(
+              child: Text(
+                'tesste',
+                style: TextStyle(
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 25),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget calingListTile() {
+    return Container(
+      color: Colors.red,
+      child: Drawer(
+        child: SafeArea(
+          child: Container(
+            color: Color(0xfff8f8f8),
+            child: ListView(
+              children: <Widget>[
+                drawerHeader(),
+                listTile(
+                    icon: Icons.home,
+                    name: 'Home',
+                    whenPreesed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => HomeScreen(),
+                        ),
+                      );
+                    }),
+                listTile(
+                    icon: Icons.add_shopping_cart,
+                    name: 'Cart',
+                    whenPreesed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => CartScreen(),
+                        ),
+                      );
+                    }),
+                listTile(
+                  icon: Icons.location_on,
+                  name: 'Address',
+                ),
+                listTile(
+                  icon: Icons.notifications_none,
+                  name: 'Notifications',
+                ),
+                listTile(
+                  icon: Icons.perm_identity,
+                  name: 'Profile',
+                  whenPreesed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => ProfileScreen(),
+                      ),
+                    );
+                  },
+                ),
+                listTile(
+                  icon: Icons.perm_identity,
+                  name: 'Orders',
+                ),
+                Divider(
+                  color: Color(0xffe5dddd),
+                ),
+                listTile(
+                  icon: Icons.info_outline,
+                  name: 'About',
+                  whenPreesed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => AboutScreen(),
+                      ),
+                    );
+                  },
+                ),
+                listTile(
+                  icon: Icons.phone,
+                  name: 'Contact',
+                  whenPreesed: () {
+                    Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => Contact()));
+                  },
+                ),
+                Divider(
+                  color: Color(0xffe5dddd),
+                ),
+                listTile(
+                  icon: Icons.exit_to_app,
+                  name: 'Logout',
+                  whenPreesed: () {
+                    FirebaseAuth.instance.signOut();
+                  },
+                ),
+              ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    getUserImage();
+    return Scaffold(
+      drawer: calingListTile(),
       appBar: AppBar(
         elevation: 0.0,
         actions: <Widget>[
@@ -298,222 +464,75 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       resizeToAvoidBottomInset: false,
       backgroundColor: Color(0xfff0f1f2),
-      body: StreamBuilder(
-        stream: Firestore.instance.collection("Food").snapshots(),
-        builder: (ctx, snapShot) {
-          if (snapShot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          }
-
-          food = Food(
-            foodRating: snapShot.data.documents[0]["foodRating"],
-            foodImage: snapShot.data.documents[0]["foodImage"],
-            foodName: snapShot.data.documents[0]["foodName"],
-            foodPrice: snapShot.data.documents[0]["foodPrice"],
-            foodType: snapShot.data.documents[0]["foodType"],
-          );
-          return StreamBuilder(
-            stream: Firestore.instance.collection("user").snapshots(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
+      body: Stack(
+        children: <Widget>[
+          StreamBuilder(
+            stream: Firestore.instance.collection("Food").snapshots(),
+            builder: (ctx, snapShot) {
+              if (snapShot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
               }
-              var myDocuments = snapshot.data.documents;
-              myDocuments.forEach(
-                (checkDocument) {
-                  if (uid == checkDocument["userId"]) {
-                    userImage = checkDocument["UserImage"];
+
+              food = Food(
+                foodRating: snapShot.data.documents[0]["foodRating"],
+                foodImage: snapShot.data.documents[0]["foodImage"],
+                foodName: snapShot.data.documents[0]["foodName"],
+                foodPrice: snapShot.data.documents[0]["foodPrice"],
+                foodType: snapShot.data.documents[0]["foodType"],
+              );
+              return StreamBuilder(
+                stream: Firestore.instance.collection("user").snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
                   }
+                  var myDocuments = snapshot.data.documents;
+                  myDocuments.forEach(
+                    (checkDocument) {
+                      if (uid == checkDocument["userId"]) {
+                        userImage = checkDocument["UserImage"];
+                      }
+                    },
+                  );
+
+                  return Container(
+                    width: double.infinity,
+                    height: double.infinity,
+                    child: Stack(
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.only(left: 10),
+                          height: double.infinity,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              callingPizza(),
+                              viewAll(),
+                              callingBottomPart(),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          height: MediaQuery.of(context).size.height * 0.2 + 40,
+                          color: Theme.of(context).primaryColor,
+                          child: Column(
+                            children: <Widget>[
+                              circle(),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
                 },
               );
-
-              return Container(
-                width: double.infinity,
-                height: double.infinity,
-                child: Stack(
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.only(left: 10),
-                      height: double.infinity,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Container(
-                            height: mediaQueryData.size.height * 0.2 + 50,
-                            //  height: MediaQuery.of(context).size.height * 0.1 + 50,
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Container(
-                                child: Row(
-                                  children: <Widget>[
-                                    plzza(
-                                      whenPreesed: () {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                CatagoryProtect(),
-                                          ),
-                                        );
-                                      },
-                                      foodImage: 'images/pizza1.png',
-                                      foodName: 'pastas',
-                                    ),
-                                    plzza(
-                                      foodImage: 'images/salads.png',
-                                      foodName: 'GreenTea',
-                                      whenPreesed: () {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                CatagoryProtect(),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                    plzza(
-                                      foodImage: 'images/salads.png',
-                                      foodName: 'GreenTea',
-                                      whenPreesed: () {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                CatagoryProtect(),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                    plzza(
-                                      foodImage: 'images/salads.png',
-                                      foodName: 'GreenTea',
-                                      whenPreesed: () {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                CatagoryProtect(),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.symmetric(horizontal: 15),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text(
-                                  'Featured',
-                                  style: TextStyle(
-                                      fontSize: 23,
-                                      color: Theme.of(context).accentColor,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              CatagoryProtect()),
-                                    );
-                                  },
-                                  child: Text(
-                                    'View All',
-                                    style: TextStyle(
-                                        fontSize: 17, color: Color(0xff04d4ee)),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: <Widget>[
-                                FeaturedContainer(
-                                  foodImage: food.foodImage,
-                                  foodName: food.foodName,
-                                  foodPrice: food.foodPrice,
-                                  foodType: food.foodType,
-                                  foodRating: food.foodRating,
-                                  whenPreesd: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => DetilePage(
-                                          foodImage: food.foodImage,
-                                          foodName: food.foodName,
-                                          foodPrice: food.foodPrice,
-                                          foodType: food.foodType,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                                FeaturedContainer(
-                                  foodImage: food.foodImage,
-                                  foodName: food.foodName,
-                                  foodPrice: food.foodPrice,
-                                  foodType: food.foodType,
-                                  foodRating: food.foodRating,
-                                  whenPreesd: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => DetilePage(
-                                          foodImage: food.foodImage,
-                                          foodName: food.foodName,
-                                          foodPrice: food.foodPrice,
-                                          foodType: food.foodType,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                                FeaturedContainer(
-                                  foodImage: food.foodImage,
-                                  foodName: food.foodName,
-                                  foodPrice: food.foodPrice,
-                                  foodType: food.foodType,
-                                  foodRating: food.foodRating,
-                                  whenPreesd: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => DetilePage(
-                                          foodImage: food.foodImage,
-                                          foodName: food.foodName,
-                                          foodPrice: food.foodPrice,
-                                          foodType: food.foodType,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      height: MediaQuery.of(context).size.height * 0.2 + 40,
-                      color: Theme.of(context).primaryColor,
-                      child: Column(
-                        children: <Widget>[
-                          circle(),
-                        ],
-                      ),
-                    ),
-                    search(),
-                  ],
-                ),
-              );
             },
-          );
-        },
+          ),
+          search(),
+        ],
       ),
     );
   }

@@ -22,7 +22,7 @@ class DetilePage extends StatefulWidget {
 
 class _DetilePageState extends State<DetilePage> {
   int value = 1;
-  double total;
+  double total=0;
 
   Widget addButton() {
     return Container(
@@ -33,7 +33,7 @@ class _DetilePageState extends State<DetilePage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                '${total == null ? widget.foodPrice.toString() : total.toString()}',
+                '${total == 0 ? widget.foodPrice.toString() : total}',
                 style: TextStyle(
                     color: Theme.of(context).accentColor, fontSize: 20),
               ),
