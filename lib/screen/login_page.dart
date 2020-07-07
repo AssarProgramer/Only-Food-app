@@ -71,29 +71,16 @@ class _LoginPageState extends State<LoginPage> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
-           MyTextField(
-                    name: 'Email',
-                    obscureText: false,
-                    controller: email,
-                  ),
-                     MyTextField(
-                    name: 'Password',
-                    obscureText: false,
-                    controller: password
-                    ,
-                  ),
-        // TextFormFeild(
-        //   myController: email,
-        //   hintText: 'Email',
-        //   myObscureText: false,
-        //   keybord: TextInputType.emailAddress,
-        // ),
-        // TextFormFeild(
-        //   myController: password,
-        //   hintText: 'Password',
-        //   myObscureText: true,
-        //   keybord: TextInputType.emailAddress,
-        // ),
+        MyTextField(
+          name: 'Email',
+          obscureText: false,
+          controller: email,
+        ),
+        MyTextField(
+          name: 'Password',
+          obscureText: false,
+          controller: password,
+        ),
       ],
     );
   }

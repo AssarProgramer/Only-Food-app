@@ -10,74 +10,156 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   MyProvider provider;
-  double foodTotalPrice = 0.0;
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   MyProvider provider = Provider.of(context, listen: false);
-  //   provider.allCartProduct.forEach((element) {
-  //     foodTotalPrice = element.foodPrice;
-  //   });
-  //   print(foodTotalPrice);
-  // }
+  @override
+  void initState() {
+    super.initState();
+    provider = Provider.of<MyProvider>(context, listen: false);
 
+    var getTotalPrice = provider.allCartProduct;
+    getTotalPrice.forEach(
+      (element) {
+        foodTotalPrice += element.foodPrice;
+      },
+    );
+  }
+
+  double foodTotalPrice = 0.0;
   Widget cartContainer(BuildContext context, int index) {
     var allCartProduct = provider.allCartProductList;
-    return Card(
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 13),
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-        child: ListTile(
-          leading: Container(
-            child: CircleAvatar(
-              backgroundImage: NetworkImage(allCartProduct[index].foodImage),
-              radius: 30,
-            ),
-          ),
-          title: Container(
-            child: Row(
-              children: <Widget>[
-                SizedBox(
-                  width: 15,
+    return Dismissible(
+      confirmDismiss: (direction) {
+        return showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('Delete'),
+              content: Text('Are you sure ?'),
+              actions: <Widget>[
+                FlatButton(
+                  onPressed: () {
+                    // Navigator.pop(context, false);
+                    Navigator.of(
+                      context,
+                      // rootNavigator: true,
+                    ).pop(false);
+                  },
+                  child: Text('No'),
                 ),
-                Text(
-                  '${allCartProduct[index].foodQuantity}x',
-                  style: TextStyle(color: Color(0xffc1c6cb), fontSize: 20),
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                Container(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Text(
-                        '${allCartProduct[index].foodName}',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20),
+                FlatButton(
+                  onPressed: () {
+                    // Navigator.pop(context, true);
+                    Navigator.of(
+                      context,
+                      // rootNavigator: true,
+                    ).pop(true);
+                  },
+                  child: Container(
+                    height: 40,
+                    width: 70,
+                    color: Theme.of(context).primaryColor,
+                    child: Center(
+                      child: Text(
+                        'Yes',
+                        style: TextStyle(color: Colors.white, fontSize: 20),
                       ),
-                      Text(
-                        '${allCartProduct[index].foodType}',
-                        style:
-                            TextStyle(color: Color(0xffc1c6cb), fontSize: 20),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ],
+            );
+          },
+        );
+      },
+      key: UniqueKey(),
+      direction: DismissDirection.horizontal,
+      crossAxisEndOffset: 0.9,
+      onDismissed: (direction) {
+        provider.deteleCartFood(
+          index,
+        );
+        // var getTotalPrice = provider.allCartProduct;
+
+        foodTotalPrice -= allCartProduct[index].foodPrice;
+
+        Scaffold.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: Theme.of(context).primaryColor,
+            content: Text(
+              'Yesh Delete kr De Bhai',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 20.0,
+                color: Colors.white,
+              ),
             ),
           ),
-          trailing: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                '\$${allCartProduct[index].foodPrice}',
-                style: TextStyle(
-                    color: Theme.of(context).accentColor,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
+        );
+      },
+      // background: Container(
+      //   padding: const EdgeInsets.only(right: 20.0),
+      //   alignment: Alignment.centerRight,
+      //   child: Icon(
+      //     Icons.delete,
+      //     size: 32.0,
+      //     color: Theme.of(context).accentColor,
+      //   ),
+      // ),
+      child: Card(
+        child: Container(
+          margin: EdgeInsets.symmetric(vertical: 13),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+          child: ListTile(
+            leading: Container(
+              child: CircleAvatar(
+                backgroundImage: NetworkImage(allCartProduct[index].foodImage),
+                radius: 30,
               ),
-            ],
+            ),
+            title: Container(
+              child: Row(
+                children: <Widget>[
+                  SizedBox(
+                    width: 15,
+                  ),
+                  Text(
+                    '${allCartProduct[index].foodQuantity}x',
+                    style: TextStyle(color: Color(0xffc1c6cb), fontSize: 20),
+                  ),
+                  SizedBox(
+                    width: 20,
+                  ),
+                  Container(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Text(
+                          '${allCartProduct[index].foodName}',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20),
+                        ),
+                        Text(
+                          '${allCartProduct[index].foodType}',
+                          style:
+                              TextStyle(color: Color(0xffc1c6cb), fontSize: 20),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            trailing: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  '\$${allCartProduct[index].foodPrice}',
+                  style: TextStyle(
+                      color: Theme.of(context).accentColor,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -128,13 +210,6 @@ class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     provider = Provider.of<MyProvider>(context);
-
-    var getTotalPrice = provider.allCartProduct;
-    getTotalPrice.forEach(
-      (element) {
-        foodTotalPrice += element.foodPrice;
-      },
-    );
 
     return Scaffold(
       appBar: AppBar(

@@ -8,21 +8,15 @@ class MyTextField extends StatelessWidget {
   final bool obscureText;
 
   final TextInputType keyborad;
-  MyTextField(
-      {
-      this.name,
-      this.obscureText,
-      this.keyborad,
-      this.controller});
+  MyTextField({this.name, this.obscureText, this.keyborad, this.controller});
   @override
   Widget build(BuildContext context) {
     return TextField(
-      
-      controller:controller,
+      controller: controller,
       keyboardType: keyborad,
       obscureText: obscureText,
       decoration: InputDecoration(
-          fillColor: Color(0xfffde6f0),
+          fillColor: Color(0xffaee4f2),
           filled: true,
           hintText: name,
           hintStyle: TextStyle(fontWeight: FontWeight.w600),

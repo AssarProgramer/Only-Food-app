@@ -14,65 +14,77 @@ class _CatagoryProtectState extends State<CatagoryProtect> {
   Food secoundFood;
   Food thirdFood;
 
-  @override
-  void initState() {
-    super.initState();
-    Firestore.instance
-        .collection('Category')
-        .document('fruits')
-        .collection('Pasta Cheese')
-        .document('O0W9y3eoTGirXH61N0DZ')
-        .snapshots()
-        .listen(
-      (event) {
-        setState(() {
-          secoundFood = Food(
-            foodImage: event['foodImage'],
-            foodName: event['foodName'],
-            foodPrice: event['foodPrice'],
-            foodType: event['foodType'],
-            foodRating: event['foodRating'],
-          );
-        });
-      },
-    );
-    Firestore.instance
-        .collection('Category')
-        .document('fruits')
-        .collection('Chicken Broast')
-        .document('j1njXeMoAQGpTIbdal7D')
-        .snapshots()
-        .listen(
-      (event) {
-        setState(() {
-          firstFood = Food(
-            foodImage: event['foodImage'],
-            foodName: event['foodName'],
-            foodPrice: event['foodPrice'],
-            foodType: event['foodType'],
-            foodRating: event['foodRating'],
-          );
-        });
-      },
-    );
-    Firestore.instance
-        .collection('Category')
-        .document('fruits')
-        .collection('Fish Fry')
-        .document('b1zc1590EQa8rHIDZowO')
-        .snapshots()
-        .listen(
-      (event) {
-        setState(() {
-          thirdFood = Food(
-            foodImage: event['foodImage'],
-            foodName: event['foodName'],
-            foodPrice: event['foodPrice'],
-            foodType: event['foodType'],
-            foodRating: event['foodRating'],
-          );
-        });
-      },
+  Widget callingBottomPart() {
+    return GridView.count(
+      crossAxisCount: 2,
+      crossAxisSpacing: 7,
+      childAspectRatio: 0.80,
+      children: <Widget>[
+        FeaturedContainer(
+          foodImage: firstFood.foodImage,
+          foodName: firstFood.foodName,
+          foodPrice: firstFood.foodPrice,
+          foodType: firstFood.foodType,
+          foodRating: firstFood.foodRating,
+          whenPreesd: () {},
+        ),
+        FeaturedContainer(
+          foodImage: secoundFood.foodImage,
+          foodName: secoundFood.foodName,
+          foodPrice: secoundFood.foodPrice,
+          foodType: secoundFood.foodType,
+          foodRating: secoundFood.foodRating,
+          whenPreesd: () {},
+        ),
+        FeaturedContainer(
+          foodImage: thirdFood.foodImage,
+          foodName: thirdFood.foodName,
+          foodPrice: thirdFood.foodPrice,
+          foodType: thirdFood.foodType,
+          foodRating: thirdFood.foodRating,
+          whenPreesd: () {},
+        ),
+        FeaturedContainer(
+          foodImage: 'images/pastascheese3.jpg',
+          foodName: 'Pasta Cheese',
+          foodPrice: 50,
+          foodType: '7 Ocean Hotal',
+          foodRating: 4.5,
+          whenPreesd: () {},
+        ),
+        FeaturedContainer(
+          foodImage: 'images/pastascheese3.jpg',
+          foodName: 'Pasta Cheese',
+          foodPrice: 50,
+          foodType: '7 Ocean Hotal',
+          foodRating: 4.5,
+          whenPreesd: () {},
+        ),
+        FeaturedContainer(
+          foodImage: 'images/pastascheese3.jpg',
+          foodName: 'Pasta Cheese',
+          foodPrice: 50,
+          foodType: '7 Ocean Hotal',
+          foodRating: 4.5,
+          whenPreesd: () {},
+        ),
+        FeaturedContainer(
+          foodImage: 'images/pastascheese3.jpg',
+          foodName: 'Pasta Cheese',
+          foodPrice: 50,
+          foodType: '7 Ocean Hotal',
+          foodRating: 4.5,
+          whenPreesd: () {},
+        ),
+        FeaturedContainer(
+          foodImage: 'images/pastascheese3.jpg',
+          foodName: 'Pasta Cheese',
+          foodPrice: 50,
+          foodType: '7 Ocean Hotal',
+          foodRating: 4.5,
+          whenPreesd: () {},
+        ),
+      ],
     );
   }
 
@@ -113,76 +125,67 @@ class _CatagoryProtectState extends State<CatagoryProtect> {
           )
         ],
       ),
-      body: GridView.count(
-        crossAxisCount: 2,
-        crossAxisSpacing: 7,
-        childAspectRatio: 0.80,
-        children: <Widget>[
-          FeaturedContainer(
-            foodImage: firstFood.foodImage,
-            foodName: firstFood.foodName,
-            foodPrice: firstFood.foodPrice,
-            foodType: firstFood.foodType,
-            foodRating: firstFood.foodRating,
-            whenPreesd: () {},
-          ),
-          FeaturedContainer(
-            foodImage: secoundFood.foodImage,
-            foodName: secoundFood.foodName,
-            foodPrice: secoundFood.foodPrice,
-            foodType: secoundFood.foodType,
-            foodRating: secoundFood.foodRating,
-            whenPreesd: () {},
-          ),
-          FeaturedContainer(
-            foodImage: thirdFood.foodImage,
-            foodName: thirdFood.foodName,
-            foodPrice: thirdFood.foodPrice,
-            foodType: thirdFood.foodType,
-            foodRating: thirdFood.foodRating,
-            whenPreesd: () {},
-          ),
-          FeaturedContainer(
-            foodImage: 'images/pastascheese3.jpg',
-            foodName: 'Pasta Cheese',
-            foodPrice: 50,
-            foodType: '7 Ocean Hotal',
-            foodRating: 4.5,
-            whenPreesd: () {},
-          ),
-          FeaturedContainer(
-            foodImage: 'images/pastascheese3.jpg',
-            foodName: 'Pasta Cheese',
-            foodPrice: 50,
-            foodType: '7 Ocean Hotal',
-            foodRating: 4.5,
-            whenPreesd: () {},
-          ),
-          FeaturedContainer(
-            foodImage: 'images/pastascheese3.jpg',
-            foodName: 'Pasta Cheese',
-            foodPrice: 50,
-            foodType: '7 Ocean Hotal',
-            foodRating: 4.5,
-            whenPreesd: () {},
-          ),
-          FeaturedContainer(
-            foodImage: 'images/pastascheese3.jpg',
-            foodName: 'Pasta Cheese',
-            foodPrice: 50,
-            foodType: '7 Ocean Hotal',
-            foodRating: 4.5,
-            whenPreesd: () {},
-          ),
-          FeaturedContainer(
-            foodImage: 'images/pastascheese3.jpg',
-            foodName: 'Pasta Cheese',
-            foodPrice: 50,
-            foodType: '7 Ocean Hotal',
-            foodRating: 4.5,
-            whenPreesd: () {},
-          ),
-        ],
+      body: StreamBuilder(
+        stream: Firestore.instance
+            .collection('Category')
+            .document('fruits')
+            .collection('Pasta Cheese')
+            .document('O0W9y3eoTGirXH61N0DZ')
+            .snapshots(),
+        builder: (context, snapShot) {
+          if (snapShot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          secoundFood = Food(
+            foodImage: snapShot.data['foodImage'],
+            foodName: snapShot.data['foodName'],
+            foodPrice: snapShot.data['foodPrice'],
+            foodType: snapShot.data['foodType'],
+            foodRating: snapShot.data['foodRating'],
+          );
+
+          return StreamBuilder(
+            stream: Firestore.instance
+                .collection('Category')
+                .document('fruits')
+                .collection('Chicken Broast')
+                .document('j1njXeMoAQGpTIbdal7D')
+                .snapshots(),
+            builder: (context, snapShot) {
+              if (snapShot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              }
+              firstFood = Food(
+                foodImage: snapShot.data['foodImage'],
+                foodName: snapShot.data['foodName'],
+                foodPrice: snapShot.data['foodPrice'],
+                foodType: snapShot.data['foodType'],
+                foodRating: snapShot.data['foodRating'],
+              );
+              return StreamBuilder(
+                stream: Firestore.instance
+                    .collection('Category')
+                    .document('fruits')
+                    .collection('Fish Fry')
+                    .document('b1zc1590EQa8rHIDZowO')
+                    .snapshots(),
+                builder: (context, snapShot) {
+                  if (snapShot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  thirdFood = Food(
+                    foodImage: snapShot.data['foodImage'],
+                    foodName: snapShot.data['foodName'],
+                    foodPrice: snapShot.data['foodPrice'],
+                    foodType: snapShot.data['foodType'],
+                    foodRating: snapShot.data['foodRating'],
+                  );
+                  return callingBottomPart();
+                },
+              );
+            },
+          );
+        },
       ),
     );
   }

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+
 class MyListTile extends StatelessWidget {
   final String myText;
   MyListTile({this.myText});
   @override
   Widget build(BuildContext context) {
-    return  Container(
+    return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Color(0xfffde6f0),
+        color: Color(0x40aee4f2),
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: Padding(

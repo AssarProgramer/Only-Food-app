@@ -31,7 +31,13 @@ class MyProvider with ChangeNotifier {
     return _cartListProduct.length;
   }
 
- List<CartProduct> get allCartProduct {
+  List<CartProduct> get allCartProduct {
     return _cartListProduct;
+  }
+
+  void deteleCartFood(int index) {
+    _cartListProduct.removeAt(index);
+
+    notifyListeners();
   }
 }

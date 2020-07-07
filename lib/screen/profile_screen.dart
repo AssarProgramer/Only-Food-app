@@ -145,7 +145,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           actions: <Widget>[
                             FlatButton(
-                              child: Text('Ok'),
+                              child: Container(
+                                  height: 40,
+                                  width: 60,
+                                  color: Theme.of(context).primaryColor,
+                                  child: Center(
+                                    child: Text(
+                                      'Ok',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                  )),
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
@@ -154,10 +166,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         );
                       },
                     );
-
-                    // getImage(
-                    //   source: ImageSource.camera,
-                    // );
                   },
                   icon: Icon(
                     Icons.edit,

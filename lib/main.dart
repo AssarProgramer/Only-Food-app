@@ -22,8 +22,8 @@ class MyApp extends StatelessWidget {
       create: (context) => MyProvider(),
       child: MaterialApp(
         theme: ThemeData(
-          primaryColor: Color(0xffff3ea5),
-          accentColor: Color(0xff04d4ee),
+          primaryColor: Color(0xff19a9d1),
+          accentColor: Color(0xffe6870b),
         ),
         debugShowCheckedModeBanner: false,
         home: StreamBuilder(

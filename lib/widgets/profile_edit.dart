@@ -28,7 +28,7 @@ class _ProfileEditState extends State<ProfileEdit> {
 
   TextEditingController address;
 
-  String gender = 'Female';
+  String gender = 'Male';
 
   @override
   void initState() {
@@ -41,31 +41,11 @@ class _ProfileEditState extends State<ProfileEdit> {
     address = TextEditingController(text: widget.user.address);
   }
 
-  // void checkGender() {
-  //   if (widget.user.gender == "Male") {
-  //     isMale = true;
-  //   } else {
-  //     isMale = false;
-  //   }
-  // }
-
   void checkGender() {
     setState(() {
-      gender == 'Female' ? gender = 'Male' : gender = 'Female';
+      gender == 'Male' ? gender = 'Female' : gender = 'Male';
     });
   }
-
-  // void checkVerify() async {
-  //   // var imageMap = await _uploadFile(image);
-  //   Firestore.instance.collection("user").document(uid).updateData({
-  //     "fullName": fullName.text,
-  //     "email": email.text,
-  //     "address": address.text,
-  //     "phoneNumber": int.parse(phoneNumber.text),
-  //     "gender": isMale == true ? "Male" : "Female",
-  //     // "UserImage": imageMap,
-  //   });
-  // }
 
   void checkValid() {
     if (fullName.text.trim() == null || fullName.text.isEmpty) {
@@ -143,7 +123,7 @@ class _ProfileEditState extends State<ProfileEdit> {
               width: double.infinity,
               padding: EdgeInsets.only(left: 12),
               decoration: BoxDecoration(
-                color: Color(0xfffde6f0),
+                color: Color(0xffaee4f2),
                 borderRadius: BorderRadius.circular(7),
               ),
               child: Align(

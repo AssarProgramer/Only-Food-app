@@ -329,7 +329,7 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             child: Text(
               'View All',
-              style: TextStyle(fontSize: 17, color: Color(0xff04d4ee)),
+              style: TextStyle(fontSize: 20, color: Theme.of(context).accentColor),
             ),
           ),
         ],
