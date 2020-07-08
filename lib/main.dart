@@ -1,4 +1,5 @@
 import 'package:fajira_grosery/provider/myprovider.dart';
+import 'package:fajira_grosery/screen/frist_slide.dart';
 import 'package:fajira_grosery/screen/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

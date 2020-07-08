@@ -182,6 +182,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     getUserId();
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       resizeToAvoidBottomInset: false,
       key: _scaffoldKey,
       appBar: AppBar(

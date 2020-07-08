@@ -134,44 +134,49 @@ class _SignUpPageState extends State<SignUpPage> {
     if (isImage == null) {
       myKey.currentState.showSnackBar(SnackBar(
         content: Text("Photo Is Empty"),
-        duration: Duration(milliseconds: 600),
+        duration: Duration(milliseconds: 700),
         backgroundColor: Theme.of(context).primaryColor,
       ));
-    }
-    if (fullName.text.trim() == null || fullName.text.isEmpty) {
+    } else if (fullName.text.trim() == null || fullName.text.isEmpty) {
       myKey.currentState.showSnackBar(SnackBar(
         content: Text("FullName Is Empty"),
-        duration: Duration(milliseconds: 600),
+        duration: Duration(milliseconds: 700),
         backgroundColor: Theme.of(context).primaryColor,
       ));
     } else if (email.text.isEmpty || email.text.trim() == null) {
       myKey.currentState.showSnackBar(SnackBar(
         content: Text("Email is Empty"),
-        duration: Duration(milliseconds: 600),
+        duration: Duration(milliseconds: 700),
         backgroundColor: Theme.of(context).primaryColor,
       ));
     } else if (!regex.hasMatch(email.text)) {
       myKey.currentState.showSnackBar(SnackBar(
         content: Text("Please Try Vaild Email"),
-        duration: Duration(milliseconds: 600),
+        duration: Duration(milliseconds: 700),
         backgroundColor: Theme.of(context).primaryColor,
       ));
     } else if (phoneNumber.text.isEmpty) {
       myKey.currentState.showSnackBar(SnackBar(
         content: Text("Phone Number is Empty"),
-        duration: Duration(milliseconds: 600),
+        duration: Duration(milliseconds: 700),
         backgroundColor: Theme.of(context).primaryColor,
       ));
     } else if (int.tryParse(phoneNumber.text) == null) {
       myKey.currentState.showSnackBar(SnackBar(
         content: Text("Please Enter Vaild Number"),
-        duration: Duration(milliseconds: 600),
+        duration: Duration(milliseconds: 700),
         backgroundColor: Theme.of(context).primaryColor,
       ));
     } else if (int.tryParse(phoneNumber.text) < 0) {
       myKey.currentState.showSnackBar(SnackBar(
         content: Text("Phone Number  Not Less then 0"),
-        duration: Duration(milliseconds: 600),
+        duration: Duration(milliseconds: 700),
+        backgroundColor: Theme.of(context).primaryColor,
+      ));
+    } else if (address.text.isEmpty || address.text.trim() == null) {
+      myKey.currentState.showSnackBar(SnackBar(
+        content: Text("Address is Empty"),
+        duration: Duration(milliseconds: 700),
         backgroundColor: Theme.of(context).primaryColor,
       ));
     } else {
@@ -264,30 +269,6 @@ class _SignUpPageState extends State<SignUpPage> {
                     obscureText: false,
                     controller: phoneNumber,
                   ),
-                  // TextFormFeild(
-                  //   myObscureText: false,
-                  //   hintText: 'Full Name',
-                  //   myController: fullName,
-                  //   keybord: TextInputType.emailAddress,
-                  // ),
-                  // TextFormFeild(
-                  //   myObscureText: false,
-                  //   hintText: 'Email',
-                  //   myController: email,
-                  //   keybord: TextInputType.emailAddress,
-                  // ),
-                  // TextFormFeild(
-                  //   myObscureText: true,
-                  //   myController: password,
-                  //   keybord: TextInputType.emailAddress,
-                  //   hintText: 'Password',
-                  // ),
-                  // TextFormFeild(
-                  //   myObscureText: false,
-                  //   hintText: 'Phonn Number',
-                  //   myController: phoneNumber,
-                  //   keybord: TextInputType.number,
-                  // ),
                   GestureDetector(
                     onTap: () {
                       setState(() {
@@ -298,7 +279,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       padding: EdgeInsets.only(top: 20, left: 10),
                       width: double.infinity,
                       decoration: BoxDecoration(
-                          color: Color(0xfffde6f0),
+                          color: Color(0x40aee4f2),
                           borderRadius: BorderRadius.circular(10)),
                       height: 60,
                       child: Text(
@@ -315,12 +296,6 @@ class _SignUpPageState extends State<SignUpPage> {
                     obscureText: false,
                     controller: address,
                   ),
-                  // TextFormFeild(
-                  //   myObscureText: false,
-                  //   myController: address,
-                  //   keybord: TextInputType.emailAddress,
-                  //   hintText: 'Address',
-                  // ),
                 ],
               ),
             ),

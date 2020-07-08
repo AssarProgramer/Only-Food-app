@@ -98,57 +98,65 @@ class _ProfileEditState extends State<ProfileEdit> {
   Widget listItems() {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          MyTextField(
-            name: "FullName",
-            obscureText: false,
-            controller: fullName,
-          ),
-          MyTextField(
-            name: 'Email',
-            obscureText: false,
-            controller: email,
-          ),
-          MyTextField(
-            name: "PhoneNumber",
-            obscureText: false,
-            controller: phoneNumber,
-          ),
-          GestureDetector(
-            onTap: checkGender,
-            child: Container(
-              height: 60,
-              width: double.infinity,
-              padding: EdgeInsets.only(left: 12),
-              decoration: BoxDecoration(
-                color: Color(0xffaee4f2),
-                borderRadius: BorderRadius.circular(7),
+      child: SingleChildScrollView(
+        child: Container(
+          height: 530,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              MyTextField(
+                name: "FullName",
+                obscureText: false,
+                controller: fullName,
               ),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  gender,
-                  style: TextStyle(fontSize: 17, color: Color(0xff221f20)),
+              MyTextField(
+                name: 'Email',
+                obscureText: false,
+                controller: email,
+              ),
+              MyTextField(
+                name: "PhoneNumber",
+                obscureText: false,
+                controller: phoneNumber,
+              ),
+              GestureDetector(
+                onTap: checkGender,
+                child: Container(
+                  height: 60,
+                  width: double.infinity,
+                  padding: EdgeInsets.only(left: 12),
+                  decoration: BoxDecoration(
+                    color: Color(0x40aee4f2),
+                    borderRadius: BorderRadius.circular(7),
+                  ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      gender,
+                      style: TextStyle(fontSize: 17, color: Color(0xff221f20)),
+                    ),
+                  ),
                 ),
               ),
-            ),
+              MyTextField(
+                obscureText: false,
+                name: "Address",
+                controller: address,
+              ),
+              RasiedButton(
+                buttonText: 'Update',
+                colors: Theme.of(context).primaryColor,
+                textColors: Colors.white,
+                whenPrassed: () {
+                  checkValid();
+                },
+              ),
+              Container(
+                height: 30,
+              ),
+            ],
           ),
-          MyTextField(
-            obscureText: false,
-            name: "Address",
-            controller: address,
-          ),
-          RasiedButton(
-            buttonText: 'Update',
-            colors: Theme.of(context).primaryColor,
-            textColors: Colors.white,
-            whenPrassed: () {
-              checkValid();
-            },
-          ),
-        ],
+        ),
       ),
     );
   }

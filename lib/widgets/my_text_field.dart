@@ -16,7 +16,7 @@ class MyTextField extends StatelessWidget {
       keyboardType: keyborad,
       obscureText: obscureText,
       decoration: InputDecoration(
-          fillColor: Color(0xffaee4f2),
+          fillColor: Color(0x40aee4f2),
           filled: true,
           hintText: name,
           hintStyle: TextStyle(fontWeight: FontWeight.w600),

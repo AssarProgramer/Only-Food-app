@@ -205,17 +205,17 @@ class _DetilePageState extends State<DetilePage> {
           child: Stack(
             children: <Widget>[
               Container(
-                width: double.infinity,
+                height: double.infinity,
                 color: Colors.white,
                 child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 20, vertical: 20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
                       Container(
-                        height: 260,
+                        height:300,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -258,8 +258,9 @@ class _DetilePageState extends State<DetilePage> {
                                   foodQuantity: value,
                                   foodImage: widget.foodImage,
                                   foodName: widget.foodName,
-                                  foodPrice:
-                                      total == null ? widget.foodPrice : total,
+                                  foodPrice: total == null
+                                      ? widget.foodPrice
+                                      : total,
                                   foodType: widget.foodType,
                                 );
                                 Navigator.of(context).push(
@@ -277,13 +278,16 @@ class _DetilePageState extends State<DetilePage> {
                 ),
               ),
               Container(
-                height: 150,
+                height: MediaQuery.of(context).size.height * 0.2 + 50,
                 color: Color(0xfffef6fa),
                 child: ListTile(
                   leading: IconButton(
-                    icon: Icon(
-                      Icons.arrow_back,
-                      color: Colors.black,
+                    icon: Padding(
+                      padding: const EdgeInsets.only(right: 50),
+                      child: Icon(
+                        Icons.arrow_back,
+                        color: Colors.black,
+                      ),
                     ),
                     onPressed: () {
                       Navigator.of(context).pop();
@@ -293,14 +297,14 @@ class _DetilePageState extends State<DetilePage> {
               ),
               Container(
                 width: double.infinity,
-                height: 200,
+                height: 300,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Container(
-                      padding: EdgeInsets.only(top: 20),
+                      padding: EdgeInsets.only(top: 70),
                       child: CircleAvatar(
-                        radius: 80,
+                        radius: 90,
                         backgroundImage: NetworkImage(widget.foodImage),
                       ),
                     ),

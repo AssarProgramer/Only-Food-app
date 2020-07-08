@@ -10,8 +10,8 @@ class AboutScreen extends StatelessWidget {
         centerTitle: true,
       ),
       body: Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
+      child: ListView(
+      
         children: <Widget>[
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 15),

@@ -9,6 +9,8 @@ import '../widgets/featured_container.dart';
 import './about_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../model/food.dart';
+import '../searchbar/data_page.dart';
+import '../searchbar/search.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -119,7 +121,10 @@ class _HomeScreenState extends State<HomeScreen> {
               fillColor: Colors.white,
               filled: true,
               suffixIcon: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    showSearch(
+                        context: context, delegate: DataSearch(listWords));
+                  },
                   icon: Icon(
                     Icons.search,
                     color: Theme.of(context).primaryColor,
@@ -329,7 +334,8 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             child: Text(
               'View All',
-              style: TextStyle(fontSize: 20, color: Theme.of(context).accentColor),
+              style:
+                  TextStyle(fontSize: 20, color: Theme.of(context).accentColor),
             ),
           ),
         ],
