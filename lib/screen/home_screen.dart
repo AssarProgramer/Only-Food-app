@@ -9,8 +9,9 @@ import '../widgets/featured_container.dart';
 import './about_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../model/food.dart';
-import '../searchbar/data_page.dart';
-import '../searchbar/search.dart';
+import 'search.dart';
+import 'package:provider/provider.dart';
+import '../provider/myprovider.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -19,8 +20,27 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   Food food;
+  Food searchFood;
   var userImage;
   var uid;
+
+  @override
+  void initState() {
+    super.initState();
+    MyProvider provider = Provider.of<MyProvider>(context, listen: false);
+    Firestore.instance.collection("Food").snapshots().forEach((element) {
+      element.documents.forEach((element) {
+        searchFood = Food(
+            foodRating: element["foodRating"],
+            foodImage: element["foodImage"],
+            foodName: element["foodName"],
+            foodPrice: element["foodPrice"],
+            foodType: element["foodType"]);
+        provider.getfoodList.add(searchFood);
+      });
+    });
+  }
+
   void getUserImage() async {
     final FirebaseUser user = await FirebaseAuth.instance.currentUser();
     uid = user.uid;
@@ -108,27 +128,26 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          TextFormField(
-            cursorColor: Colors.red,
-            decoration: InputDecoration(
-              focusColor: Colors.red,
-              hoverColor: Colors.red,
-              border: OutlineInputBorder(
-                borderSide: BorderSide.none,
-                borderRadius: BorderRadius.circular(10.0),
+          GestureDetector(
+            onTap: () {
+              showSearch(
+                context: context,
+                delegate: SearchBar(),
+              );
+            },
+            child: Container(
+              height: 60,
+              child: ListTile(
+                trailing: Icon(
+                  Icons.search,
+                  color: Theme.of(context).primaryColor,
+                ),
+                leading: Text('Want to search anything'),
               ),
-              hintText: 'Want to search anything',
-              fillColor: Colors.white,
-              filled: true,
-              suffixIcon: IconButton(
-                  onPressed: () {
-                    showSearch(
-                        context: context, delegate: DataSearch(listWords));
-                  },
-                  icon: Icon(
-                    Icons.search,
-                    color: Theme.of(context).primaryColor,
-                  )),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
             ),
           ),
         ],
@@ -383,6 +402,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           builder: (context) => HomeScreen(),
                         ),
                       );
+                      FocusScope.of(context).unfocus();
                     }),
                 listTile(
                     icon: Icons.add_shopping_cart,

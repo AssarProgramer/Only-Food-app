@@ -291,6 +291,7 @@ class _DetilePageState extends State<DetilePage> {
                     ),
                     onPressed: () {
                       Navigator.of(context).pop();
+                      FocusScope.of(context).unfocus();
                     },
                   ),
                 ),

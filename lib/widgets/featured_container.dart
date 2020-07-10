@@ -7,7 +7,9 @@ class FeaturedContainer extends StatelessWidget {
   final String foodType;
   final double foodPrice;
   final Function whenPreesd;
+  final BuildContext context;
   FeaturedContainer({
+    this.context,
     this.foodImage,
     this.foodName,
     this.foodPrice,
