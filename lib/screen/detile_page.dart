@@ -208,14 +208,14 @@ class _DetilePageState extends State<DetilePage> {
                 height: double.infinity,
                 color: Colors.white,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 20, vertical: 20),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
                       Container(
-                        height:300,
+                        height: 300,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -258,9 +258,8 @@ class _DetilePageState extends State<DetilePage> {
                                   foodQuantity: value,
                                   foodImage: widget.foodImage,
                                   foodName: widget.foodName,
-                                  foodPrice: total == null
-                                      ? widget.foodPrice
-                                      : total,
+                                  foodPrice:
+                                      total == null ? widget.foodPrice : total,
                                   foodType: widget.foodType,
                                 );
                                 Navigator.of(context).push(
@@ -279,7 +278,7 @@ class _DetilePageState extends State<DetilePage> {
               ),
               Container(
                 height: MediaQuery.of(context).size.height * 0.2 + 50,
-                color: Color(0xfffef6fa),
+                color: Color(0xffd7eef5),
                 child: ListTile(
                   leading: IconButton(
                     icon: Padding(

@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import './screen/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'screen/search.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -19,6 +19,7 @@ class MyApp extends StatelessWidget {
         DeviceOrientation.portraitUp,
       ],
     );
+
     return ChangeNotifierProvider(
       create: (context) => MyProvider(),
       child: MaterialApp(
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
           accentColor: Color(0xffe6870b),
         ),
         debugShowCheckedModeBanner: false,
+      //  home: Test(),
         home: StreamBuilder(
           stream: FirebaseAuth.instance.onAuthStateChanged,
           builder: (ctx, userSnapshot) {

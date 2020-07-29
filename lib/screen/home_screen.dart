@@ -1,8 +1,9 @@
-import 'package:fajira_grosery/screen/cart_screen.dart';
-import 'package:fajira_grosery/screen/catagory_protect.dart';
-import 'package:fajira_grosery/screen/contact_screen.dart';
-import 'package:fajira_grosery/screen/detile_page.dart';
-import 'package:fajira_grosery/screen/profile_screen.dart';
+
+import './cart_screen.dart';
+import './catagory_protect.dart';
+import './contact_screen.dart';
+import './detile_page.dart';
+import './profile_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../widgets/featured_container.dart';
@@ -20,26 +21,16 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   Food food;
-  Food searchFood;
   var userImage;
   var uid;
 
-  @override
-  void initState() {
-    super.initState();
-    MyProvider provider = Provider.of<MyProvider>(context, listen: false);
-    Firestore.instance.collection("Food").snapshots().forEach((element) {
-      element.documents.forEach((element) {
-        searchFood = Food(
-            foodRating: element["foodRating"],
-            foodImage: element["foodImage"],
-            foodName: element["foodName"],
-            foodPrice: element["foodPrice"],
-            foodType: element["foodType"]);
-        provider.getfoodList.add(searchFood);
-      });
-    });
-  }
+  //  @override
+  //  void initState() {
+  //   super.initState();
+  //  MyProvider provider = Provider.of<MyProvider>(context, listen: false);
+  //   provider.fetchAllFoods();
+  
+  //  }
 
   void getUserImage() async {
     final FirebaseUser user = await FirebaseAuth.instance.currentUser();
@@ -132,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onTap: () {
               showSearch(
                 context: context,
-                delegate: SearchBar(),
+                delegate: SearchBarA(),
               );
             },
             child: Container(
@@ -142,7 +133,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   Icons.search,
                   color: Theme.of(context).primaryColor,
                 ),
-                leading: Text('Want to search anything'),
+                leading: Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: Text(
+                    'Want to search anything',
+                    style: TextStyle(fontSize: 15),
+                  ),
+                ),
               ),
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -479,6 +476,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    MyProvider provider = Provider.of<MyProvider>(context, listen: false);
+    provider.fetchAllFoods();
     getUserImage();
     return Scaffold(
       drawer: calingListTile(),
@@ -550,6 +549,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           ),
                         ),
+                        search(),
                       ],
                     ),
                   );
@@ -557,7 +557,6 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             },
           ),
-          search(),
         ],
       ),
     );

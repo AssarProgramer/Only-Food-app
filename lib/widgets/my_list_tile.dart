@@ -8,7 +8,7 @@ class MyListTile extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Color(0x40aee4f2),
+        color: Color(0x70d7eef5),
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: Padding(

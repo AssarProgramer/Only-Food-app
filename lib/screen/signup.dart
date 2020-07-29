@@ -22,12 +22,24 @@ class _SignUpPageState extends State<SignUpPage> {
   bool isMale = true;
 
   File isImage;
-  Future getImage({ImageSource source}) async {
-    final pickedImage = await ImagePicker().getImage(source: source);
+  File camaraImage;
+  Future getImage(bool iscamera) async {
+    if (iscamera) {
+      isImage = await ImagePicker.pickImage(source: ImageSource.camera);
+    } else {
+      isImage = await ImagePicker.pickImage(source: ImageSource.gallery);
+    }
     setState(() {
-      isImage = File(pickedImage.path);
+      camaraImage = isImage;
     });
   }
+
+  // Future getImage({ImageSource source}) async {
+  //   final pickedImage = await ImagePicker().getImage(source: source);
+  //   setState(() {
+  //     isImage = File(pickedImage.path);
+  //   });
+  // }
 
   Future<Map<String, String>> _uploadFile(File _image) async {
     String _imagePath = _image.path;
@@ -51,7 +63,6 @@ class _SignUpPageState extends State<SignUpPage> {
 
   final RegExp regex = RegExp(pattern);
 
-  final _auth = FirebaseAuth.instance;
   AuthResult authResult;
 
   GlobalKey<ScaffoldState> myKey = GlobalKey<ScaffoldState>();
@@ -66,10 +77,7 @@ class _SignUpPageState extends State<SignUpPage> {
       setState(() {
         _netWorkLodding = true;
       });
-      authResult = await _auth.createUserWithEmailAndPassword(
-        email: email.text,
-        password: password.text,
-      );
+
       var imageMap = await _uploadFile(isImage);
       User user = User(
         myImage: imageMap["imageUrl"],
@@ -134,49 +142,43 @@ class _SignUpPageState extends State<SignUpPage> {
     if (isImage == null) {
       myKey.currentState.showSnackBar(SnackBar(
         content: Text("Photo Is Empty"),
-        duration: Duration(milliseconds: 700),
+        duration: Duration(milliseconds: 800),
         backgroundColor: Theme.of(context).primaryColor,
       ));
     } else if (fullName.text.trim() == null || fullName.text.isEmpty) {
       myKey.currentState.showSnackBar(SnackBar(
         content: Text("FullName Is Empty"),
-        duration: Duration(milliseconds: 700),
+        duration: Duration(milliseconds: 800),
         backgroundColor: Theme.of(context).primaryColor,
       ));
     } else if (email.text.isEmpty || email.text.trim() == null) {
       myKey.currentState.showSnackBar(SnackBar(
         content: Text("Email is Empty"),
-        duration: Duration(milliseconds: 700),
+        duration: Duration(milliseconds: 800),
+        backgroundColor: Theme.of(context).primaryColor,
+      ));
+    } else if (password.text.trim() == null || password.text.isEmpty) {
+      myKey.currentState.showSnackBar(SnackBar(
+        content: Text("Password Is Empty"),
+        duration: Duration(milliseconds: 800),
         backgroundColor: Theme.of(context).primaryColor,
       ));
     } else if (!regex.hasMatch(email.text)) {
       myKey.currentState.showSnackBar(SnackBar(
         content: Text("Please Try Vaild Email"),
-        duration: Duration(milliseconds: 700),
+        duration: Duration(milliseconds: 800),
         backgroundColor: Theme.of(context).primaryColor,
       ));
     } else if (phoneNumber.text.isEmpty) {
       myKey.currentState.showSnackBar(SnackBar(
         content: Text("Phone Number is Empty"),
-        duration: Duration(milliseconds: 700),
+        duration: Duration(milliseconds: 800),
         backgroundColor: Theme.of(context).primaryColor,
       ));
-    } else if (int.tryParse(phoneNumber.text) == null) {
-      myKey.currentState.showSnackBar(SnackBar(
-        content: Text("Please Enter Vaild Number"),
-        duration: Duration(milliseconds: 700),
-        backgroundColor: Theme.of(context).primaryColor,
-      ));
-    } else if (int.tryParse(phoneNumber.text) < 0) {
-      myKey.currentState.showSnackBar(SnackBar(
-        content: Text("Phone Number  Not Less then 0"),
-        duration: Duration(milliseconds: 700),
-        backgroundColor: Theme.of(context).primaryColor,
-      ));
-    } else if (address.text.isEmpty || address.text.trim() == null) {
+    }  else if (address.text.isEmpty || address.text.trim() == null) {
       myKey.currentState.showSnackBar(SnackBar(
         content: Text("Address is Empty"),
-        duration: Duration(milliseconds: 700),
+        duration: Duration(milliseconds: 800),
         backgroundColor: Theme.of(context).primaryColor,
       ));
     } else {
@@ -218,9 +220,66 @@ class _SignUpPageState extends State<SignUpPage> {
           ),
           GestureDetector(
             onTap: () {
-              getImage(
-                source: ImageSource.camera,
+              showDialog<void>(
+                context: context,
+                barrierDismissible: false, // user must tap button!
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Choice Your Option'),
+                    content: SingleChildScrollView(
+                      child: ListBody(
+                        children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              IconButton(
+                                  icon: Icon(Icons.camera_alt),
+                                  onPressed: () {
+                                    getImage(true);
+                                  }),
+                              Text("From Camera"),
+                            ],
+                          ),
+                          Row(
+                            children: <Widget>[
+                              IconButton(
+                                  icon: Icon(Icons.photo_album),
+                                  onPressed: () {
+                                    getImage(false);
+                                  }),
+                              Text(
+                                "From Gallery",
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: Container(
+                            height: 40,
+                            width: 60,
+                            color: Theme.of(context).primaryColor,
+                            child: Center(
+                              child: Text(
+                                'Ok',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                ),
+                              ),
+                            )),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                },
               );
+              // getImage(
+              //   source: ImageSource.camera,
+              // );
             },
             child: CircleAvatar(
               backgroundColor: Colors.red,

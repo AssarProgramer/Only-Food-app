@@ -1,7 +1,5 @@
 import '../model/user.dart';
-
 import 'package:flutter/material.dart';
-
 import 'my_text_field.dart';
 import 'rasied_button.dart';
 
@@ -27,13 +25,11 @@ class _ProfileEditState extends State<ProfileEdit> {
   TextEditingController phoneNumber;
 
   TextEditingController address;
-
-  String gender = 'Male';
-
+  String gender;
   @override
   void initState() {
     super.initState();
-
+    gender = widget.user.gender;
     fullName = TextEditingController(text: widget.user.fullName);
     email = TextEditingController(text: widget.user.email);
     phoneNumber =
@@ -78,13 +74,15 @@ class _ProfileEditState extends State<ProfileEdit> {
         duration: Duration(milliseconds: 600),
         backgroundColor: Theme.of(context).primaryColor,
       ));
-    } else if (int.tryParse(phoneNumber.text) < 0) {
+    }
+     else if (int.tryParse(phoneNumber.text) < 0) {
       widget.scaffoldKey.currentState.showSnackBar(SnackBar(
         content: Text("Phone Number  Not Less then 0"),
         duration: Duration(milliseconds: 600),
         backgroundColor: Theme.of(context).primaryColor,
       ));
-    } else {
+    }
+    else {
       widget.checkVeriy(
         phoneNumber.text,
         email.text,
@@ -118,6 +116,8 @@ class _ProfileEditState extends State<ProfileEdit> {
                 name: "PhoneNumber",
                 obscureText: false,
                 controller: phoneNumber,
+                keyborad: TextInputType.number,
+              
               ),
               GestureDetector(
                 onTap: checkGender,
@@ -126,7 +126,7 @@ class _ProfileEditState extends State<ProfileEdit> {
                   width: double.infinity,
                   padding: EdgeInsets.only(left: 12),
                   decoration: BoxDecoration(
-                    color: Color(0x40aee4f2),
+                    color: Color(0x70d7eef5),
                     borderRadius: BorderRadius.circular(7),
                   ),
                   child: Align(

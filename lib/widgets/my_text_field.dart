@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class MyTextField extends StatelessWidget {
   final String name;
@@ -16,14 +17,15 @@ class MyTextField extends StatelessWidget {
       keyboardType: keyborad,
       obscureText: obscureText,
       decoration: InputDecoration(
-          fillColor: Color(0x40aee4f2),
-          filled: true,
-          hintText: name,
-          hintStyle: TextStyle(fontWeight: FontWeight.w600),
-          border: OutlineInputBorder(
-            borderSide: BorderSide.none,
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-          )),
+        fillColor: Color(0x70d7eef5),
+        filled: true,
+        hintText: name,
+        hintStyle: TextStyle(fontWeight: FontWeight.w600),
+        border: OutlineInputBorder(
+          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+      ),
     );
   }
 }

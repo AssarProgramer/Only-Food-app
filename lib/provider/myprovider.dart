@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../model/cart_product.dart';
 import '../model/food.dart';
@@ -5,7 +6,8 @@ import '../model/food.dart';
 class MyProvider with ChangeNotifier {
   List<CartProduct> _cartListProduct = [];
   CartProduct cartProduct;
-  List<Food> foodList = [];
+
+  List<Food> _allFoodsList = [];
   void addCartProduct({
     String foodName,
     String foodImage,
@@ -42,11 +44,32 @@ class MyProvider with ChangeNotifier {
 
     notifyListeners();
   }
-   List<Food> get getfoodList {
-    return foodList;
+
+  List<Food> get getfoodList {
+    return _allFoodsList;
   }
 
-  List<Food> get getMyFoodList {
-    return foodList;
+  Future<void> fetchAllFoods()async {
+    Food food;
+    List<Food> newList =[];
+    QuerySnapshot allFood =
+        await Firestore.instance.collection("Food").getDocuments();
+    allFood.documents.forEach((element) {
+      food = Food(
+          foodName: element.data['foodName'],
+          foodImage: element.data['foodImage'],
+          foodPrice: element.data['foodPrice'],
+          foodRating: element.data['foodRating'],
+          foodType: element.data['foodType']);
+          newList.add(food);
+    });
+    _allFoodsList = newList;
+  }
+
+  List<Food> search(String query) {
+    List<Food> searchFood = _allFoodsList.where((element) {
+      return element.foodName.contains(query);
+    }).toList();
+    return searchFood;
   }
 }

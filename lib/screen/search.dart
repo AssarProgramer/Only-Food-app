@@ -5,7 +5,14 @@ import '../provider/myprovider.dart';
 
 import '../widgets/featured_container.dart';
 
-class SearchBar extends SearchDelegate<Food> {
+class SearchBarA extends SearchDelegate<Food> {
+  SearchBarA({
+    String hintText = "Song Search",
+  }) : super(
+          searchFieldLabel: hintText,
+          keyboardType: TextInputType.text,
+          textInputAction: TextInputAction.search,
+        );
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
@@ -33,41 +40,40 @@ class SearchBar extends SearchDelegate<Food> {
 
   @override
   Widget buildResults(BuildContext context) {
-    MyProvider provider = Provider.of<MyProvider>(context, listen: false);
-    var search = provider.getMyFoodList;
-    final result =
-        search.where((s) => s.foodName.toLowerCase().contains(query));
+    MyProvider provider = Provider.of<MyProvider>(context);
+
+    List<Food>_searchFood=provider.search(query);
 
     return GridView.count(
         childAspectRatio: 0.87,
         crossAxisCount: 2,
         padding: EdgeInsets.only(top: 10),
-        children: result
-            .map<Widget>(
-              (e) => FeaturedContainer(
-                foodImage: e.foodImage,
-                foodName: e.foodName,
-                foodPrice: e.foodPrice,
-                foodRating: e.foodRating,
-                foodType: e.foodType,
-                whenPreesd: () {},
-              ),
-            )
-            .toList());
+        children: _searchFood.map<Widget>(
+          (e) {
+            return FeaturedContainer(
+              foodImage: e.foodImage,
+              foodName: e.foodName,
+              foodPrice: e.foodPrice,
+              foodRating: e.foodRating,
+              foodType: e.foodType,
+              whenPreesd: () {},
+            );
+          },
+        ).toList());
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    MyProvider provider = Provider.of<MyProvider>(context, listen: false);
-    var search = provider.getMyFoodList;
-    final result =
-        search.where((s) => s.foodName.toLowerCase().contains(query));
+    MyProvider provider = Provider.of<MyProvider>(
+      context,
+    );
+    List<Food> _searchFood = provider.search(query);
 
     return GridView.count(
       childAspectRatio: 0.87,
       crossAxisCount: 2,
       padding: EdgeInsets.only(top: 10),
-      children: result
+      children: _searchFood
           .map<Widget>(
             (e) => FeaturedContainer(
               context: context,

@@ -232,7 +232,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
         stream: Firestore.instance.collection("user").snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return Column(
+              children: <Widget>[
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
+                Expanded(
+                  flex: 2,
+                  child: Container(
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                ),
+              ],
+            );
           }
 
           var myDocument = snapshot.data.documents;
